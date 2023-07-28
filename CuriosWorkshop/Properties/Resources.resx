@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">text/microsoft-resx</resheader>
+  <resheader name="version">2.0</resheader>
+  <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms</resheader>
+  <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms</resheader>
+
+  <data name="PhotoCamera" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PhotoCamera.png;System.Byte[], mscorlib</value>
+  </data>
+  <data name="DisposableCamera" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DisposableCamera.png;System.Byte[], mscorlib</value>
+  </data>
+  <data name="Photo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Photo.png;System.Byte[], mscorlib</value>
+  </data>
+  <data name="PhotoFrame" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PhotoFrame.png;System.Byte[], mscorlib</value>
+  </data>
+  <data name="TakePhoto" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TakePhoto.mp3;System.Byte[], mscorlib</value>
+  </data>
+</root>
