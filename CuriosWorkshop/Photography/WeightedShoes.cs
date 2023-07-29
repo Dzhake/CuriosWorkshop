@@ -22,7 +22,7 @@ namespace CuriosWorkshop
                      {
                          IsAvailableInCC = false,
                          LeadingItems = { nameof(PhotoCamera) },
-                         Recommendations = { nameof(PhotoCamera), nameof(DisposableCamera) },
+                         Recommendations = { nameof(PhotoCamera), nameof(DisposableCamera), nameof(Streamcorder), nameof(SoulStealer) },
                      });
         }
 

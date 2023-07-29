@@ -20,4 +20,14 @@
   <data name="TakePhoto" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\TakePhoto.mp3;System.Byte[], mscorlib</value>
   </data>
+
+  <data name="Streamcorder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Streamcorder.png;System.Byte[], mscorlib</value>
+  </data>
+  <data name="LivePhoto" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LivePhoto.png;System.Byte[], mscorlib</value>
+  </data>
+  <data name="SoulStealer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SoulStealer.png;System.Byte[], mscorlib</value>
+  </data>
 </root>

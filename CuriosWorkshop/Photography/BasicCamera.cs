@@ -18,39 +18,43 @@ namespace CuriosWorkshop
         }
 
         public abstract Vector2Int PhotoSize { get; }
-        public virtual string SoundEffectName => "TakePhoto";
 
-        public virtual void AugmentPhoto(Photo photo, Rect rect) { }
+        public abstract bool OnOverlay(Rect rect, Vector2Int size);
+        public abstract bool TakePhoto(Rect rect, Vector2Int size);
+
+        private Rect GetRectSize(Vector2 center, out Vector2Int size)
+        {
+            size = PhotoSize;
+            tk2dCamera tk2dCamera = GameController.gameController.cameraScript.actualCamera;
+            Vector2 worldSize = (Vector2)size / (100f * tk2dCamera.ZoomFactor);
+            if (Owner!.HasTrait<WeightedShoes>())
+            {
+                size += size / 4;
+                worldSize += worldSize / 4f;
+            }
+            return new Rect(center - 0.5f * worldSize, worldSize);
+        }
 
         public bool TargetFilter(Vector2 position)
         {
-            PhotoUtils.SetCameraOverlay(Owner!.mainGUI, position, Properties.Resources.PhotoFrame);
-            // TODO: move the photo frame to the cursor
-            return true;
+            Rect rect = GetRectSize(position, out Vector2Int size);
+            return OnOverlay(rect, size) && Owner!.movement.HasLOSPosition(position, "360");
         }
         public bool TargetPosition(Vector2 position)
         {
+            if (!Owner!.movement.HasLOSPosition(position, "360"))
+            {
+                gc.audioHandler.Play(Owner, "CantDo");
+                return false;
+            }
             if (!Inventory!.hasEmptySlot())
             {
                 gc.audioHandler.Play(Owner, "CantDo");
                 Owner!.SayDialogue("InventoryFull");
                 return false;
             }
-
-            Vector2Int size = PhotoSize;
-            if (Owner!.HasTrait<WeightedShoes>()) size += size / 4;
-            int detail = Owner!.HasTrait<SteadyHand>() ? 2 : 1;
-
-            gc.audioHandler.Play(Owner, SoundEffectName);
-            Texture2D screenshot = PhotoUtils.TakeScreenshot(size, detail, position);
-
-            Photo photo = Inventory.AddItem<Photo>(1)!;
-            photo.genTexture = screenshot;
-            AugmentPhoto(photo,);
-
-            Count--;
-            Item.invInterface.HideTarget();
-            return true;
+            Rect rect = GetRectSize(position, out Vector2Int size);
+            return TakePhoto(rect, size);
         }
         public CustomTooltip TargetCursorText(Vector2 position) => default;
 

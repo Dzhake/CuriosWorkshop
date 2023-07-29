@@ -3,39 +3,39 @@ using UnityEngine;
 
 namespace CuriosWorkshop
 {
-    [ItemCategories(RogueCategories.Usable, RogueCategories.Technology)]
-    public class PhotoCamera : BasicCamera
+    [ItemCategories(RogueCategories.Usable, RogueCategories.Technology, RogueCategories.Stealth, RogueCategories.Weird)]
+    public class Streamcorder : BasicCamera
     {
         [RLSetup]
         public static void Setup()
         {
-            RogueLibs.CreateCustomItem<PhotoCamera>()
+            RogueLibs.CreateCustomItem<Streamcorder>()
                      .WithName(new CustomNameInfo
                      {
-                         English = "Photo Camera",
-                         Russian = @"Фотоаппарат",
+                         English = "Streamcorder",
+                         Russian = @"Стрим-камера",
                      })
                      .WithDescription(new CustomNameInfo
                      {
                          English = "",
                          Russian = @"",
                      })
-                     .WithSprite(Properties.Resources.PhotoCamera)
+                     .WithSprite(Properties.Resources.Streamcorder)
                      .WithUnlock(new ItemUnlock
                      {
-                         UnlockCost = 0,
-                         // TODO: Prerequisites = { nameof(Photographer) },
-                         CharacterCreationCost = 5,
-                         LoadoutCost = 5,
+                         UnlockCost = 10,
+                         CharacterCreationCost = 3,
+                         LoadoutCost = 3,
+                         Prerequisites = { nameof(PhotoCamera) },
                      });
         }
 
         public override void SetupDetails()
         {
             Item.itemType = ItemTypes.Tool;
-            Item.initCount = 10;
-            Item.rewardCount = 10;
-            Item.itemValue = 40;
+            Item.initCount = 2;
+            Item.rewardCount = 3;
+            Item.itemValue = 80;
             Item.stackable = true;
             Item.hasCharges = true;
             Item.goesInToolbar = true;
@@ -45,19 +45,17 @@ namespace CuriosWorkshop
 
         public override bool OnOverlay(Rect rect, Vector2Int size)
         {
-            PhotoUtils.SetCameraOverlay(Owner!.mainGUI, rect.center, size, CameraOverlayType.Normal);
+            PhotoUtils.SetCameraOverlay(Owner!.mainGUI, rect.center, size, CameraOverlayType.Streamcorder);
             return true;
         }
         public override bool TakePhoto(Rect rect, Vector2Int size)
         {
             gc.audioHandler.Play(Owner, "TakePhoto");
-            Texture2D screenshot = PhotoUtils.TakeScreenshot(rect.center, size);
+            // TODO: make a Live Photo instead
+            //Texture2D screenshot = PhotoUtils.TakeScreenshot(rect);
 
-            gc.spawnerMain.SpawnItem(rect.min, "Fud");
-            gc.spawnerMain.SpawnItem(rect.max, "Fud");
-
-            Photo photo = Inventory!.AddItem<Photo>(1)!;
-            photo.genTexture = screenshot;
+            //Photo photo = Inventory!.AddItem<Photo>(1)!;
+            //photo.genTexture = screenshot;
 
             Item.invInterface.HideTarget();
             Count--;

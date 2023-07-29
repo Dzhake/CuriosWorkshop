@@ -41,5 +41,23 @@ namespace CuriosWorkshop
 
         public override Vector2Int PhotoSize => new Vector2Int(400, 300);
 
+        public override bool OnOverlay(Rect rect, Vector2Int size)
+        {
+            PhotoUtils.SetCameraOverlay(Owner!.mainGUI, rect.center, size, CameraOverlayType.Disposable);
+            return true;
+        }
+        public override bool TakePhoto(Rect rect, Vector2Int size)
+        {
+            gc.audioHandler.Play(Owner, "TakePhoto");
+            Texture2D screenshot = PhotoUtils.TakeScreenshot(rect.center, size);
+
+            Photo photo = Inventory!.AddItem<Photo>(1)!;
+            photo.genTexture = screenshot;
+
+            Item.invInterface.HideTarget();
+            Count--;
+            return true;
+        }
+
     }
 }
