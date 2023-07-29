@@ -1,7 +1,5 @@
-﻿using System;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Logging;
-using JetBrains.Annotations;
 using RogueLibsCore;
 
 namespace CuriosWorkshop
@@ -23,36 +21,7 @@ namespace CuriosWorkshop
             Patcher = new RoguePatcher(this);
             RogueLibs.LoadFromAssembly();
 
-            Patcher.Prefix(typeof(QuestMarker), "OnDisable");
-
-        }
-
-        private static bool preventQuestMarkerDestruction;
-        public static bool QuestMarker_OnDisable() => !preventQuestMarkerDestruction;
-
-        public static void WithHiddenInterface([InstantHandle] Action action)
-        {
-            static void SetInterface(bool value)
-            {
-                GameController gc = GameController.gameController;
-                gc.nonClickableGUI.go.SetActive(value);
-                gc.mainGUI.gameObject.SetActive(value);
-                preventQuestMarkerDestruction = true;
-                gc.questMarkerList.ForEach(q => q.go.SetActive(value));
-                preventQuestMarkerDestruction = false;
-                gc.questMarkerSmallList.ForEach(q => q.gameObject.SetActive(value));
-            }
-            try
-            {
-                preventQuestMarkerDestruction = true;
-                SetInterface(false);
-                action();
-            }
-            finally
-            {
-                SetInterface(true);
-                preventQuestMarkerDestruction = false;
-            }
+            PhotographyPatches.Apply();
         }
 
     }

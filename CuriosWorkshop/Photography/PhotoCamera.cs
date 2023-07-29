@@ -53,11 +53,9 @@ namespace CuriosWorkshop
             gc.audioHandler.Play(Owner, "TakePhoto");
             Texture2D screenshot = PhotoUtils.TakeScreenshot(rect.center, size);
 
-            gc.spawnerMain.SpawnItem(rect.min, "Fud");
-            gc.spawnerMain.SpawnItem(rect.max, "Fud");
-
             Photo photo = Inventory!.AddItem<Photo>(1)!;
             photo.genTexture = screenshot;
+            photo.capturedFeatures = PhotoFeature.Create(rect);
 
             Item.invInterface.HideTarget();
             Count--;

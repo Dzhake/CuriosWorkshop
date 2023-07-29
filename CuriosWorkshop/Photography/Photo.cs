@@ -25,6 +25,7 @@ namespace CuriosWorkshop
 
         public Texture2D? genTexture;
         public string? genSpriteName;
+        public PhotoFeature[]? capturedFeatures;
 
         public override void SetupDetails()
         {
@@ -37,7 +38,9 @@ namespace CuriosWorkshop
         public bool UseItem()
         {
             gc.audioHandler.Play(Owner, "OpenMenu");
-            // TODO: open the taken picture in a window
+            PhotoUI ui = PhotographyPatches.GetPhotoUI(Owner!.mainGUI);
+            Owner!.mainGUI.HideEverything();
+            ui.Show(this);
             return true;
         }
 

@@ -73,6 +73,46 @@ namespace CuriosWorkshop.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] Flashlight {
+            get {
+                object obj = ResourceManager.GetObject("Flashlight", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] FlashlightLight {
+            get {
+                object obj = ResourceManager.GetObject("FlashlightLight", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] FlashlightOff {
+            get {
+                object obj = ResourceManager.GetObject("FlashlightOff", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] FlashlightOn {
+            get {
+                object obj = ResourceManager.GetObject("FlashlightOn", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] LivePhoto {
             get {
                 object obj = ResourceManager.GetObject("LivePhoto", resourceCulture);
@@ -106,6 +146,26 @@ namespace CuriosWorkshop.Properties {
         internal static byte[] PhotoFrame {
             get {
                 object obj = ResourceManager.GetObject("PhotoFrame", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] PhotoSummaryBackground {
+            get {
+                object obj = ResourceManager.GetObject("PhotoSummaryBackground", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] PhotoWindow {
+            get {
+                object obj = ResourceManager.GetObject("PhotoWindow", resourceCulture);
                 return ((byte[])(obj));
             }
         }

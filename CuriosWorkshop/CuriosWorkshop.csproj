@@ -26,6 +26,10 @@
   </Target>
 
   <ItemGroup>
+    <None Remove="CuriosWorkshop.csproj.DotSettings" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\.ref\Assembly-CSharp.dll</HintPath>
     </Reference>
@@ -55,6 +59,9 @@
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
       <HintPath>..\..\.ref\static\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>..\..\.ref\static\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>..\..\.ref\static\UnityEngine.InputLegacyModule.dll</HintPath>

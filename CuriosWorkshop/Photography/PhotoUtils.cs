@@ -1,4 +1,7 @@
-﻿using Light2D;
+﻿using JetBrains.Annotations;
+using System;
+using System.Collections.Generic;
+using Light2D;
 using RogueLibsCore;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,7 +35,7 @@ namespace CuriosWorkshop
                 tr.position = new Vector3(center.x, center.y, prevPos.z);
                 tk2dCamera.ZoomFactor *= detailLevel * (Screen.width / widthF);
 
-                CuriosPlugin.WithHiddenInterface(() =>
+                WithPhotoVision(() =>
                 {
                     RenderTexture prevRender = camera.targetTexture;
 
@@ -43,8 +46,9 @@ namespace CuriosWorkshop
 
                     // set the render texture and read pixels from it
                     RenderTexture.active = render;
-                    screenshot = new Texture2D(width, height, TextureFormat.RGB24, false);
+                    screenshot = new Texture2D(width, height, TextureFormat.ARGB32, false);
                     screenshot.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+                    screenshot.Apply();
 
                     // return previous values
                     camera.targetTexture = prevRender;
@@ -76,6 +80,37 @@ namespace CuriosWorkshop
             return go.AddComponent<CameraOverlay>();
         }
 
+        public static void WithPhotoVision([InstantHandle] Action action)
+        {
+            static void SetVisible(bool value)
+            {
+                GameController gc = GameController.gameController;
+                gc.nonClickableGUI.go.SetActive(value);
+                gc.mainGUI.gameObject.SetActive(value);
+                gc.questMarkerList.ForEach(q => q.go.SetActive(value));
+                gc.questMarkerSmallList.ForEach(q => q.gameObject.SetActive(value));
+            }
+            List<Agent> affectedAgents = new();
+            try
+            {
+                PhotographyPatches.preventQuestMarkerDestruction = true;
+                SetVisible(false);
+
+                foreach (Agent agent in GameController.gameController.agentList)
+                    if (agent.ghost || agent.HasTrait(VanillaTraits.CameraShy))
+                        affectedAgents.Add(agent);
+
+                affectedAgents.ForEach(static a => a.gameObject.SetActive(false));
+                action();
+            }
+            finally
+            {
+                SetVisible(true);
+                PhotographyPatches.preventQuestMarkerDestruction = false;
+                affectedAgents.ForEach(static a => a.gameObject.SetActive(true));
+            }
+        }
+
     }
     public class CameraOverlay : MonoBehaviour
     {
@@ -98,7 +133,6 @@ namespace CuriosWorkshop
         {
             Camera screenCamera = GameController.gameController.cameraScript.actualCamera.ScreenCamera;
             Vector2 targetPos = screenCamera.WorldToScreenPoint(center);
-            CuriosPlugin.Logger.LogDebug($"{center} - {screenCamera.transform.position} >> {targetPos}");
 
             transform.position = Vector2.SmoothDamp(transform.position, targetPos, ref moveSpeed, 0.1f);
 

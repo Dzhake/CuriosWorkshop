@@ -17,10 +17,15 @@
   <data name="PhotoFrame" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PhotoFrame.png;System.Byte[], mscorlib</value>
   </data>
+  <data name="PhotoWindow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PhotoWindow.png;System.Byte[], mscorlib</value>
+  </data>
+  <data name="PhotoSummaryBackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PhotoSummaryBackground.png;System.Byte[], mscorlib</value>
+  </data>
   <data name="TakePhoto" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\TakePhoto.mp3;System.Byte[], mscorlib</value>
   </data>
-
   <data name="Streamcorder" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Streamcorder.png;System.Byte[], mscorlib</value>
   </data>
@@ -29,5 +34,18 @@
   </data>
   <data name="SoulStealer" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SoulStealer.png;System.Byte[], mscorlib</value>
+  </data>
+
+  <data name="Flashlight" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Flashlight.png;System.Byte[], mscorlib</value>
+  </data>
+  <data name="FlashlightLight" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FlashlightLight.png;System.Byte[], mscorlib</value>
+  </data>
+  <data name="FlashlightOn" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FlashlightOn.mp3;System.Byte[], mscorlib</value>
+  </data>
+  <data name="FlashlightOff" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\FlashlightOff.mp3;System.Byte[], mscorlib</value>
   </data>
 </root>

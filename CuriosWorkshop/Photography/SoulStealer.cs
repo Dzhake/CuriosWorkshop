@@ -56,6 +56,7 @@ namespace CuriosWorkshop
 
             //Photo photo = Inventory!.AddItem<Photo>(1)!;
             //photo.genTexture = screenshot;
+            //photo.capturedFeatures = PhotoFeature.Create(rect);
 
             Item.invInterface.HideTarget();
             Count--;
