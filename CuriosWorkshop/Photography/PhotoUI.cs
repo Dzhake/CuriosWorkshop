@@ -8,6 +8,20 @@ namespace CuriosWorkshop
 {
     public class PhotoUI : MonoBehaviour
     {
+        public static PhotoUI Get(MainGUI gui)
+        {
+            Transform? tr = gui.transform.Find(nameof(PhotoUI));
+            if (!tr)
+            {
+                tr = new GameObject(nameof(PhotoUI), typeof(RectTransform)).transform;
+                tr.SetParent(gui.transform, true);
+                tr.localPosition = Vector3.zero;
+                tr.localScale = Vector3.one;
+                tr.gameObject.AddComponent<PhotoUI>();
+            }
+            return tr.GetComponent<PhotoUI>();
+        }
+
         private bool showingPhoto;
 
         private RectTransform rect = null!;

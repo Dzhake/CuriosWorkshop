@@ -48,4 +48,8 @@
   <data name="FlashlightOff" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\FlashlightOff.mp3;System.Byte[], mscorlib</value>
   </data>
+
+  <data name="TargetingItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TargetingItem.png;System.Byte[], mscorlib</value>
+  </data>
 </root>

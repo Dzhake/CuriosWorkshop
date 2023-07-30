@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
+using JetBrains.Annotations;
 using Light2D;
 using RogueLibsCore;
 using UnityEngine;
@@ -33,21 +35,16 @@ namespace CuriosWorkshop
             RogueLibs.CreateCustomAudio("FlashlightOn", Properties.Resources.FlashlightOn, AudioType.MPEG);
             RogueLibs.CreateCustomAudio("FlashlightOff", Properties.Resources.FlashlightOff, AudioType.MPEG);
 
-            Texture2D src = new Texture2D(15, 9);
-            src.LoadImage(Properties.Resources.FlashlightLight);
-            src.filterMode = FilterMode.Bilinear;
-            Sprite sprite = Sprite.Create(src, new Rect(0, 0, 128, 128), new Vector2(0.5f, 0.5f), 64, 0u, SpriteMeshType.FullRect, Vector4.zero, false);
-            FlashlightSprite = sprite;
+            FlashlightSprite = RogueUtilities.ConvertToSprite(Properties.Resources.FlashlightLight);
+            FlashlightSprite.texture.filterMode = FilterMode.Bilinear;
 
-            Shader lightShader = Shader.Find("Light2D/Light 60 Points");
-            Material material = new Material(lightShader);
-            material.globalIlluminationFlags |= MaterialGlobalIlluminationFlags.RealtimeEmissive;
-
-            FlashlightMaterial = material;
+            FlashlightMaterial = new Material(Shader.Find("Light2D/Light 60 Points"));
+            FlashlightMaterial.globalIlluminationFlags |= MaterialGlobalIlluminationFlags.RealtimeEmissive;
+            // new Color32(255, 100, 255, 255)
         }
 
-        public static Material FlashlightMaterial = null!;
         public static Sprite FlashlightSprite = null!;
+        public static Material FlashlightMaterial = null!;
 
         public override void SetupDetails()
         {
@@ -76,74 +73,81 @@ namespace CuriosWorkshop
         }
         public void AimLight(Gun gun)
         {
-            Vector2 mousePos = Owner!.agentCamera.actualCamera.ScreenCamera.ScreenToWorldPoint(Input.mousePosition);
-            Vector2 agentPos = Owner.tr.position;
-            Vector2 direction = (mousePos - agentPos).normalized;
-
-            Transform? tr = gun.gunContainerTr.Find(nameof(FlashlightLight));
-            bool justCreated = !tr;
-            if (!tr)
-            {
-                tr = new GameObject(nameof(FlashlightLight)).transform;
-                tr.SetParent(gun.gunContainerTr);
-                tr.localPosition = Vector3.zero;
-                tr.gameObject.AddComponent<FlashlightLight>();
-            }
-            if (!tr.gameObject.activeSelf || justCreated)
-            {
-                tr.gameObject.SetActive(true);
-                gc.audioHandler.Play(Owner!, "FlashlightOn");
-            }
-
-            tr.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f);
-            tr.localPosition = new Vector3(0.32f, 0f, 0f);
-            tr.localScale = gun.gunContainerTr.localScale * 8f;
+            FlashlightLight light = FlashlightLight.Get(gun);
+            light.TurnOn(() => gc.audioHandler.Play(Owner!, "FlashlightOn"));
+            light.UpdateLight(new Color32(199, 174, 120, 255));
         }
         public void TurnOff(Gun gun)
         {
-            Transform? tr = gun.gunContainerTr.Find(nameof(FlashlightLight));
-            if (tr && tr.gameObject.activeSelf)
-            {
-                tr.gameObject.SetActive(false);
-                gc.audioHandler.Play(Owner!, "FlashlightOff");
-            }
+            FlashlightLight light = FlashlightLight.Get(gun);
+            light.TurnOff(() => gc.audioHandler.Play(Owner!, "FlashlightOff"));
         }
 
     }
     public class FlashlightLight : MonoBehaviour
     {
         private LightSprite[] lightSprites = null!;
-        private MeshRenderer meshRenderer = null!;
-
         private static readonly MethodInfo forceUpdateMesh
             = typeof(LightSprite).GetMethod("UpdateMeshData", BindingFlags.NonPublic | BindingFlags.Instance)!;
 
-        public void Awake()
+        private void Awake()
         {
             static LightSprite CreateLight(GameObject go)
             {
                 LightSprite lightSprite = go.AddComponent<LightSprite>();
                 lightSprite.Sprite = Flashlight.FlashlightSprite;
                 lightSprite.Material = Flashlight.FlashlightMaterial;
-                lightSprite.Color = new Color32(199, 174, 120, 255);
                 return lightSprite;
             }
 
-            const int length = 8;
+            const int length = 1;
             lightSprites = new LightSprite[length];
             for (int i = 0; i < length; i++)
                 lightSprites[i] = CreateLight(gameObject);
 
-            meshRenderer = gameObject.GetComponent<MeshRenderer>();
-            meshRenderer.renderingLayerMask = 4294967295u;
+            MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
+            renderer.renderingLayerMask = 4294967295u;
             transform.localScale = new Vector3(12f, 12f, 0f);
-            tag = "Light";
             gameObject.layer = 11;
+            tag = "Light";
         }
-        public void Update()
+        private void Update()
         {
             for (int i = 0, length = lightSprites.Length; i < length; i++)
                 forceUpdateMesh.Invoke(lightSprites[i], new object?[] { true });
         }
+
+        public void UpdateLight(Color color)
+        {
+            transform.localEulerAngles = new Vector3(0f, 0f, -90f);
+            Array.ForEach(lightSprites, light => light.Color = color);
+        }
+        public void TurnOn([InstantHandle] Action sideEffect)
+        {
+            if (gameObject.activeSelf) return;
+            gameObject.SetActive(true);
+            sideEffect();
+        }
+        public void TurnOff([InstantHandle] Action sideEffect)
+        {
+            if (!gameObject.activeSelf) return;
+            gameObject.SetActive(false);
+            sideEffect();
+        }
+
+        public static FlashlightLight Get(Gun gun)
+        {
+            Transform? tr = gun.gunContainerTr.Find(nameof(FlashlightLight));
+            if (!tr)
+            {
+                tr = new GameObject(nameof(FlashlightLight)).transform;
+                tr.SetParent(gun.gunContainerTr);
+                tr.localPosition = Vector3.zero;
+                tr.gameObject.SetActive(false);
+                return tr.gameObject.AddComponent<FlashlightLight>();
+            }
+            return tr.GetComponent<FlashlightLight>();
+        }
+
     }
 }

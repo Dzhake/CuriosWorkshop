@@ -199,5 +199,15 @@ namespace CuriosWorkshop.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] TargetingItem {
+            get {
+                object obj = ResourceManager.GetObject("TargetingItem", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

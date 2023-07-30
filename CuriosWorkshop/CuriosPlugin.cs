@@ -21,7 +21,10 @@ namespace CuriosWorkshop
             Patcher = new RoguePatcher(this);
             RogueLibs.LoadFromAssembly();
 
+            CompatPatches.Apply();
             PhotographyPatches.Apply();
+            LightingPatches.Apply();
+            HomeBasePatches.Apply();
         }
 
     }

@@ -33,6 +33,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\.ref\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\.ref\static\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="BepInEx">
       <HintPath>..\..\.ref\static\BepInEx.dll</HintPath>
     </Reference>
