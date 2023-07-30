@@ -6,147 +6,73 @@ using UnityEngine.UI;
 
 namespace CuriosWorkshop
 {
-    public class PhotoUI : MonoBehaviour
+    public class PhotoUI : CustomUserInterface
     {
-        public static PhotoUI Get(MainGUI gui)
-        {
-            Transform? tr = gui.transform.Find(nameof(PhotoUI));
-            if (!tr)
-            {
-                tr = new GameObject(nameof(PhotoUI), typeof(RectTransform)).transform;
-                tr.SetParent(gui.transform, true);
-                tr.localPosition = Vector3.zero;
-                tr.localScale = Vector3.one;
-                tr.gameObject.AddComponent<PhotoUI>();
-            }
-            return tr.GetComponent<PhotoUI>();
-        }
-
-        private bool showingPhoto;
-        public bool IsOpened => showingPhoto;
-
-        private MainGUI mainGUI = null!;
-        private RectTransform rect = null!;
-        private Canvas canvas = null!;
-
         private Image picture = null!;
         private readonly List<FeatureUI> features = new();
 
-        public static GameController gc => GameController.gameController;
+        public Photo? Photo;
 
-        private T Create<T>(string goName, GameObject? parent = null) where T : Component
+        public override void Setup()
         {
-            GameObject go = new GameObject(goName, typeof(RectTransform));
-            RectTransform goRect = go.GetComponent<RectTransform>();
-            goRect.SetParent((parent ?? gameObject).transform, true);
-            goRect.localPosition = Vector3.zero;
-            goRect.localScale = Vector3.one;
-            return go.AddComponent<T>();
-        }
-
-        public void Awake()
-        {
-            mainGUI = gameObject.GetComponentInParent<MainGUI>();
-            rect = gameObject.GetComponent<RectTransform>();
-            canvas = gameObject.AddComponent<Canvas>();
-            canvas.enabled = false;
-            Image background = gameObject.AddComponent<Image>();
-
             gameObject.AddComponent<GraphicRaycaster>();
 
-            background.sprite = RogueUtilities.ConvertToSprite(Properties.Resources.PhotoWindow);
-            rect.sizeDelta = background.sprite.rect.size;
+            Image window = Create<Image>(transform, "PhotoWindow", new Vector2(260, 140), Properties.Resources.PhotoWindow);
 
-            Image frame = Create<Image>("PhotoFrame");
-            frame.sprite = RogueUtilities.ConvertToSprite(Properties.Resources.PhotoFrame);
-            frame.rectTransform.sizeDelta = frame.sprite.rect.size * 2f;
-            frame.rectTransform.localPosition = new Vector3(-260, 0);
+            Sprite frameSprite = RogueUtilities.ConvertToSprite(Properties.Resources.PhotoFrame);
+            Image frame = Create<Image>(transform, "PhotoFrame", new Vector2(284, 224), Properties.Resources.PhotoFrame, 2f);
+            frame.sprite = frameSprite;
 
-            picture = Create<Image>("PhotoImage");
-            picture.rectTransform.sizeDelta = new Vector2(400f, 300f) * 2f;
-            picture.rectTransform.localPosition = new Vector3(-260, 0);
+            picture = Create<Image>(transform, "PhotoImage", new Rect(300, 240, 800, 600));
 
-            Image summaryBackground = Create<Image>("PhotoSummary");
-            summaryBackground.sprite = RogueUtilities.ConvertToSprite(Properties.Resources.PhotoSummaryBackground);
-            summaryBackground.rectTransform.sizeDelta = summaryBackground.sprite.rect.size;
-            summaryBackground.rectTransform.localPosition = new Vector3(428, -12);
+            Image summaryBackground = Create<Image>(transform, "PhotoSummary", new Vector2(1132, 172), Properties.Resources.PhotoSummaryBackground);
 
-            Rect summaryRect = summaryBackground.rectTransform.rect;
             const int count = 15;
             for (int i = 0; i < count; i++)
             {
-                FeatureUI feature = Create<FeatureUI>($"PhotoFeature {i + 1}", summaryBackground.gameObject);
-                feature.rect.localPosition = new Vector3(summaryRect.center.x, summaryRect.yMax - 8f - 24f) - new Vector3(0, 48) * i;
+                FeatureUI feature = Create<FeatureUI>(summaryBackground.transform, $"PhotoFeature {i + 1}", new Rect(8, 8 + 48 * i, 496, 48));
                 features.Add(feature);
             }
 
         }
 
-        public void Hide()
+        public override void OnOpened()
         {
-            if (!showingPhoto) return;
-            gc.audioHandler.Play(mainGUI.agent, "HideInterface");
-            showingPhoto = false;
-            canvas.enabled = false;
-        }
-        public void Show(Photo photo)
-        {
-            gc.audioHandler.Play(mainGUI.agent, "ShowInterface");
-            showingPhoto = false;
-            mainGUI.HideEverything();
-            mainGUI.agent.worldSpaceGUI.HideEverything2();
+            gc.audioHandler.Play(MainGUI.agent, "ShowInterface");
 
-            showingPhoto = true;
-            canvas.enabled = true;
-
-            Rect photoRect = new Rect(0f, 0f, photo.genTexture!.width, photo.genTexture.height);
-            Sprite sprite = Sprite.Create(photo.genTexture, photoRect, new Vector2(0.5f, 0.5f), 64f, 0u, SpriteMeshType.FullRect, Vector4.zero);
+            Texture2D photo = Photo!.genTexture!;
+            Rect photoRect = new Rect(0f, 0f, photo.width, photo.height);
+            Sprite sprite = Sprite.Create(photo, photoRect, new Vector2(0.5f, 0.5f), 64f, 0u, SpriteMeshType.FullRect, Vector4.zero);
             picture.sprite = sprite;
 
-            PhotoFeature[]? captured = photo.capturedFeatures;
+            PhotoFeature[]? captured = Photo.capturedFeatures;
             for (int i = 0, count = features.Count; i < count; i++)
                 features[i].Set(captured is null || i >= captured.Length ? null : captured[i]);
         }
-
-        public class FeatureUI : MonoBehaviour
+        public override void OnClosed()
         {
-            public RectTransform rect = null!;
+            gc.audioHandler.Play(MainGUI.agent, "HideInterface");
+        }
+
+        public class FeatureUI : CustomUiElement
+        {
             private Text text = null!;
             private Image moneyIcon = null!;
             private Text moneyText = null!;
 
-            private T Create<T>(string goName, GameObject? parent = null) where T : Component
+            public override void Awake()
             {
-                GameObject go = new GameObject(goName, typeof(RectTransform));
-                RectTransform goRect = go.GetComponent<RectTransform>();
-                goRect.SetParent((parent ?? gameObject).transform, true);
-                goRect.localPosition = Vector3.zero;
-                goRect.localScale = Vector3.one;
-                return go.AddComponent<T>();
-            }
-
-            public void Awake()
-            {
-                rect = gameObject.GetComponent<RectTransform>();
-                rect.sizeDelta = new Vector2(496, 48);
-
-                text = Create<Text>("Description");
-                text.rectTransform.sizeDelta = new Vector2(376 - 8, 48);
-                text.rectTransform.localPosition = new Vector3(-60, 0);
-                text.font = GameController.gameController.munroFont;
+                text = Create<Text>(transform, "Description", new Rect(0f, 0f, 376 - 8, 48));
+                text.font = gc.munroFont;
                 text.fontSize = 40;
                 text.alignment = TextAnchor.MiddleLeft;
                 text.horizontalOverflow = HorizontalWrapMode.Overflow;
                 text.verticalOverflow = VerticalWrapMode.Overflow;
 
-                moneyIcon = Create<Image>("MoneyIcon");
-                moneyIcon.rectTransform.sizeDelta = new Vector2(48, 48);
-                moneyIcon.rectTransform.localPosition = new Vector3(148, 0);
+                moneyIcon = Create<Image>(transform, "MoneyIcon", new Rect(376, 0, 48, 48));
 
-                moneyText = Create<Text>("MoneyText");
-                moneyText.rectTransform.sizeDelta = new Vector2(80 - 8, 48);
-                moneyText.rectTransform.localPosition = new Vector3(208, -4);
-                moneyText.font = GameController.gameController.munroFont;
+                moneyText = Create<Text>(transform, "MoneyText", new Rect(416, 0, 80, 48));
+                moneyText.font = gc.munroFont;
                 moneyText.fontSize = 40;
                 moneyText.color = Color.green;
                 moneyText.alignment = TextAnchor.MiddleLeft;

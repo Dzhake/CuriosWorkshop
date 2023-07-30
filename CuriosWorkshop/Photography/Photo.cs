@@ -37,7 +37,16 @@ namespace CuriosWorkshop
         }
         public bool UseItem()
         {
-            PhotoUI.Get(Owner!.mainGUI).Show(this);
+            PhotoUI ui = CustomUserInterface.Get<PhotoUI>(Owner!.mainGUI);
+            if (ui.IsOpened)
+            {
+                ui.HideInterface();
+                return false;
+            }
+            ui.Photo = this;
+            Owner.mainGUI.HideEverything();
+            Owner.worldSpaceGUI.HideEverything2();
+            ui.ShowInterface();
             return true;
         }
 

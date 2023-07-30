@@ -141,7 +141,7 @@ namespace CuriosWorkshop
             Vector2 sizeMultiplier = size / type.Size;
             rect.sizeDelta = type.Sprite.rect.size * sizeMultiplier * screenMultiplier;
 
-            float newAlpha = Mathf.Min(prevAlpha + 2f * Time.deltaTime, 1.5f);
+            float newAlpha = Mathf.Min(prevAlpha + 4f * Time.deltaTime, 1.5f);
             img.color = img.color.WithAlpha(Mathf.Clamp01(newAlpha));
             prevAlpha = newAlpha;
 
@@ -153,7 +153,7 @@ namespace CuriosWorkshop
             if (activeCounter == activeCounterPrev)
             {
                 activeCounter = 0;
-                float newAlpha = Mathf.Clamp01(prevAlpha - 2f * Time.deltaTime);
+                float newAlpha = Mathf.Clamp01(Mathf.Min(prevAlpha, 0f) - 4f * Time.deltaTime);
                 img.color = img.color.WithAlpha(newAlpha);
                 prevAlpha = newAlpha;
             }
