@@ -59,11 +59,11 @@ namespace CuriosWorkshop
             texture.SetPixels(polaroid.GetPixels());
 
             const int templateScale = 4; // 256 / 64
-            const float frameCornerX = 10 * templateScale;
+            const float frameCornerX = 12 * templateScale;
             const float frameCornerY = 23 * templateScale;
-            const float frameWidth = 40f * templateScale;
-            const float frameHeight = 35f * templateScale;
-            const float frameAngle = 12f * Mathf.Deg2Rad;
+            const float frameWidth = 40 * templateScale;
+            const float frameHeight = 30 * templateScale;
+            const float frameAngle = 0 * Mathf.Deg2Rad;
 
             int pictureWidth = picture.width;
             int pictureHeight = picture.height;
