@@ -32,8 +32,8 @@ namespace CuriosWorkshop
                          LoadoutCost = 0,
                      });
 
-            RogueLibs.CreateCustomAudio("FlashlightOn", Properties.Resources.FlashlightOn, AudioType.MPEG);
-            RogueLibs.CreateCustomAudio("FlashlightOff", Properties.Resources.FlashlightOff, AudioType.MPEG);
+            RogueLibs.CreateCustomAudio("FlashlightOn", Properties.Resources.FlashlightOn);
+            RogueLibs.CreateCustomAudio("FlashlightOff", Properties.Resources.FlashlightOff);
 
             FlashlightSprite = RogueUtilities.ConvertToSprite(Properties.Resources.FlashlightLight);
             FlashlightSprite.texture.filterMode = FilterMode.Bilinear;

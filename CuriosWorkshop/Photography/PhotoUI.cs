@@ -23,12 +23,16 @@ namespace CuriosWorkshop
         }
 
         private bool showingPhoto;
+        public bool IsOpened => showingPhoto;
 
+        private MainGUI mainGUI = null!;
         private RectTransform rect = null!;
         private Canvas canvas = null!;
 
         private Image picture = null!;
         private readonly List<FeatureUI> features = new();
+
+        public static GameController gc => GameController.gameController;
 
         private T Create<T>(string goName, GameObject? parent = null) where T : Component
         {
@@ -42,9 +46,13 @@ namespace CuriosWorkshop
 
         public void Awake()
         {
+            mainGUI = gameObject.GetComponentInParent<MainGUI>();
             rect = gameObject.GetComponent<RectTransform>();
             canvas = gameObject.AddComponent<Canvas>();
+            canvas.enabled = false;
             Image background = gameObject.AddComponent<Image>();
+
+            gameObject.AddComponent<GraphicRaycaster>();
 
             background.sprite = RogueUtilities.ConvertToSprite(Properties.Resources.PhotoWindow);
             rect.sizeDelta = background.sprite.rect.size;
@@ -76,12 +84,18 @@ namespace CuriosWorkshop
 
         public void Hide()
         {
+            if (!showingPhoto) return;
+            gc.audioHandler.Play(mainGUI.agent, "HideInterface");
             showingPhoto = false;
             canvas.enabled = false;
         }
         public void Show(Photo photo)
         {
-            if (showingPhoto) Hide();
+            gc.audioHandler.Play(mainGUI.agent, "ShowInterface");
+            showingPhoto = false;
+            mainGUI.HideEverything();
+            mainGUI.agent.worldSpaceGUI.HideEverything2();
+
             showingPhoto = true;
             canvas.enabled = true;
 

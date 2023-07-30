@@ -8,7 +8,7 @@ namespace CuriosWorkshop
         [RLSetup]
         private static void Setup()
         {
-            RogueLibs.CreateCustomAudio("TakePhoto", Properties.Resources.TakePhoto, AudioType.MPEG);
+            RogueLibs.CreateCustomAudio("TakePhoto", Properties.Resources.TakePhoto);
 
             RogueLibs.CreateCustomName("TakePhoto", NameTypes.Interface, new CustomNameInfo
             {
@@ -54,7 +54,9 @@ namespace CuriosWorkshop
                 return false;
             }
             Rect rect = GetRectSize(position, out Vector2Int size);
-            return TakePhoto(rect, size);
+            bool res = TakePhoto(rect, size);
+            if (res) Inventory.invInterface?.UpdateInvInterface();
+            return res;
         }
         public CustomTooltip TargetCursorText(Vector2 position) => default;
 

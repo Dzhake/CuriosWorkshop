@@ -37,10 +37,7 @@ namespace CuriosWorkshop
         }
         public bool UseItem()
         {
-            gc.audioHandler.Play(Owner, "OpenMenu");
-            PhotoUI ui = PhotoUI.Get(Owner!.mainGUI);
-            Owner!.mainGUI.HideEverything();
-            ui.Show(this);
+            PhotoUI.Get(Owner!.mainGUI).Show(this);
             return true;
         }
 

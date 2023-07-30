@@ -98,7 +98,8 @@ namespace CuriosWorkshop
         {
             if (myObject is Agent agent && IsCompleteDarkness)
             {
-                LightSprite light = agent.agentSpriteTransform.Find("LightRealAgent").GetComponent<LightSprite>();
+                LightSprite? light = agent.agentSpriteTransform?.Find("LightRealAgent")?.GetComponent<LightSprite>();
+                if (light is null) return;
                 if (agent.isPlayer > 0)
                 {
                     light.Color.a = 1f;
