@@ -37,7 +37,7 @@ namespace CuriosWorkshop
         }
         public bool UseItem()
         {
-            PhotoUI ui = CustomUserInterface.Get<PhotoUI>(Owner!.mainGUI);
+            PhotoUI ui = Owner!.mainGUI.Get<PhotoUI>();
             if (ui.IsOpened)
             {
                 ui.HideInterface();

@@ -41,26 +41,10 @@ namespace CuriosWorkshop
             Item.goesInToolbar = true;
         }
 
-        public override Vector2Int PhotoSize => new Vector2Int(400, 300);
+        public override CameraOverlayType Type => CameraOverlayType.Streamcorder;
 
-        public override bool OnOverlay(Rect rect, Vector2Int size)
-        {
-            PhotoUtils.SetCameraOverlay(Owner!.mainGUI, rect.center, size, CameraOverlayType.Streamcorder);
-            return true;
-        }
-        public override bool TakePhoto(Rect rect, Vector2Int size)
-        {
-            gc.audioHandler.Play(Owner, "TakePhoto");
-            // TODO: make a Live Photo instead
-            //Texture2D screenshot = PhotoUtils.TakeScreenshot(rect);
-
-            //Photo photo = Inventory!.AddItem<Photo>(1)!;
-            //photo.genTexture = screenshot;
-
-            Item.invInterface.HideTarget();
-            Count--;
-            return true;
-        }
+        public override bool OnOverlay(Rect area, Vector2Int size) => true;
+        public override bool TakePhoto(Rect area, Vector2Int size) => true;
 
     }
 }

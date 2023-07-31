@@ -41,27 +41,10 @@ namespace CuriosWorkshop
             Item.goesInToolbar = true;
         }
 
-        public override Vector2Int PhotoSize => new Vector2Int(400, 300);
+        public override CameraOverlayType Type => CameraOverlayType.SoulStealer;
 
-        public override bool OnOverlay(Rect rect, Vector2Int size)
-        {
-            PhotoUtils.SetCameraOverlay(Owner!.mainGUI, rect.center, size, CameraOverlayType.SoulStealer);
-            return true; // TODO: check for presence of any souls
-        }
-        public override bool TakePhoto(Rect rect, Vector2Int size)
-        {
-            gc.audioHandler.Play(Owner, "TakePhoto");
-            // TODO: make a Haunted Photo if souls were stolen; otherwise, a regular Photo
-            //Texture2D screenshot = PhotoUtils.TakeScreenshot(rect);
-
-            //Photo photo = Inventory!.AddItem<Photo>(1)!;
-            //photo.genTexture = screenshot;
-            //photo.capturedFeatures = PhotoFeature.Create(rect);
-
-            Item.invInterface.HideTarget();
-            Count--;
-            return true;
-        }
+        public override bool OnOverlay(Rect area, Vector2Int size) => true;
+        public override bool TakePhoto(Rect area, Vector2Int size) => true;
 
     }
 }

@@ -1,90 +1,20 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using Light2D;
+using System.Linq;
+using JetBrains.Annotations;
 using RogueLibsCore;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CuriosWorkshop
 {
     public static class PhotoUtils
     {
-        public static Texture2D TakeScreenshot(Vector2 center, Vector2Int size)
-        {
-            int width = size.x;
-            int height = size.y;
-            float screenMultiplier = Screen.width / 1920f;
-            float widthF = width * screenMultiplier;
-            float heightF = height * screenMultiplier;
-
-            tk2dCamera tk2dCamera = GameController.gameController.cameraScript.actualCamera;
-            Camera camera = tk2dCamera.ScreenCamera;
-            Transform tr = camera.transform;
-
-            Vector3 prevPos = tr.position;
-            float prevZoom = tk2dCamera.ZoomFactor;
-            Texture2D? screenshot = null;
-
-            try
-            {
-                const int detailLevel = 1;
-                width = Mathf.RoundToInt(widthF * detailLevel);
-                height = Mathf.RoundToInt(heightF * detailLevel);
-
-                tr.position = new Vector3(center.x, center.y, prevPos.z);
-                tk2dCamera.ZoomFactor *= detailLevel * (Screen.width / widthF);
-
-                WithPhotoVision(() =>
-                {
-                    RenderTexture prevRender = camera.targetTexture;
-
-                    // create a render texture and render on it
-                    RenderTexture render = new RenderTexture(width, height, 24);
-                    camera.targetTexture = render;
-                    camera.Render();
-
-                    // set the render texture and read pixels from it
-                    RenderTexture.active = render;
-                    screenshot = new Texture2D(width, height, TextureFormat.ARGB32, false);
-                    screenshot.ReadPixels(new Rect(0, 0, width, height), 0, 0);
-                    screenshot.Apply();
-
-                    // return previous values
-                    camera.targetTexture = prevRender;
-                    RenderTexture.active = null;
-                });
-            }
-            finally
-            {
-                tr.position = prevPos;
-                tk2dCamera.ZoomFactor = prevZoom;
-            }
-            return screenshot!;
-        }
-
-        public static void SetCameraOverlay(MainGUI mainGUI, Vector2 center, Vector2Int size, CameraOverlayType overlayType)
-        {
-            CameraOverlay overlay = GetCameraOverlay(mainGUI);
-
-            overlay.Set(overlayType, center, size);
-        }
-        private static CameraOverlay GetCameraOverlay(MainGUI mainGUI)
-        {
-            Transform? existing = mainGUI.transform.Find("CameraFrameOverlay");
-            if (existing) return existing.GetComponent<CameraOverlay>();
-
-            GameObject go = new GameObject("CameraFrameOverlay", typeof(RectTransform));
-            RectTransform rect = go.GetComponent<RectTransform>();
-            rect.SetParent(mainGUI.transform, true);
-            return go.AddComponent<CameraOverlay>();
-        }
+        public static GameController gc => GameController.gameController;
 
         public static void WithPhotoVision([InstantHandle] Action action)
         {
-            static void SetVisible(bool value)
+            static void SetInterfaceVisible(bool value)
             {
-                GameController gc = GameController.gameController;
                 gc.nonClickableGUI.go.SetActive(value);
                 gc.mainGUI.gameObject.SetActive(value);
                 gc.questMarkerList.ForEach(q => q.go.SetActive(value));
@@ -94,9 +24,9 @@ namespace CuriosWorkshop
             try
             {
                 PhotographyPatches.preventQuestMarkerDestruction = true;
-                SetVisible(false);
+                SetInterfaceVisible(false);
 
-                foreach (Agent agent in GameController.gameController.agentList)
+                foreach (Agent agent in gc.agentList)
                     if (agent.ghost || agent.HasTrait(VanillaTraits.CameraShy))
                         affectedAgents.Add(agent);
 
@@ -105,76 +35,32 @@ namespace CuriosWorkshop
             }
             finally
             {
-                SetVisible(true);
+                SetInterfaceVisible(true);
                 PhotographyPatches.preventQuestMarkerDestruction = false;
                 affectedAgents.ForEach(static a => a.gameObject.SetActive(true));
             }
         }
 
-    }
-    public class CameraOverlay : MonoBehaviour
-    {
-        public RectTransform rect = null!;
-        public Image img = null!;
-
-        private float prevAlpha;
-        private uint activeCounterPrev;
-        private uint activeCounter;
-
-        private Vector2 moveSpeed;
-
-        public void Awake()
+        public static PhotoFeature[] GetFeatures(Rect area)
         {
-            rect = gameObject.GetComponent<RectTransform>();
-            img = gameObject.AddComponent<Image>();
-        }
+            Vector2 padding = new Vector2(0.32f, 0.32f);
+            area = new Rect(area.min + padding, area.size - 2 * padding);
 
-        public void Set(CameraOverlayType type, Vector2 center, Vector2Int size)
-        {
-            Camera screenCamera = GameController.gameController.cameraScript.actualCamera.ScreenCamera;
-            Vector2 targetPos = screenCamera.WorldToScreenPoint(center);
+            List<PhotoFeature> list = new();
 
-            transform.position = Vector2.SmoothDamp(transform.position, targetPos, ref moveSpeed, 0.1f);
-
-            img.sprite = type.Sprite;
-            float screenMultiplier = Screen.width / 1920f;
-            Vector2 sizeMultiplier = size / type.Size;
-            rect.sizeDelta = type.Sprite.rect.size * sizeMultiplier * screenMultiplier;
-
-            float newAlpha = Mathf.Min(prevAlpha + 4f * Time.deltaTime, 1.5f);
-            img.color = img.color.WithAlpha(Mathf.Clamp01(newAlpha));
-            prevAlpha = newAlpha;
-
-            activeCounter++;
-        }
-
-        public void Update()
-        {
-            if (activeCounter == activeCounterPrev)
+            foreach (Agent agent in gc.agentList.Where(a => area.Contains((Vector2)a.tr.position)))
             {
-                activeCounter = 0;
-                float newAlpha = Mathf.Clamp01(Mathf.Min(prevAlpha, 0f) - 4f * Time.deltaTime);
-                img.color = img.color.WithAlpha(newAlpha);
-                prevAlpha = newAlpha;
+                if (agent.agentRealName?.StartsWith("E_") is not false) continue;
+                list.Add(new PhotoFeature("Agent", agent.agentRealName, 5f));
             }
-            activeCounterPrev = activeCounter;
+            foreach (ObjectReal obj in gc.objectRealList.Where(o => area.Contains((Vector2)o.tr.position)))
+            {
+                if (obj.objectRealRealName?.StartsWith("E_") is not false) continue;
+                list.Add(new PhotoFeature("Object", obj.objectRealRealName, 5f));
+            }
+
+            return list.ToArray();
         }
 
-    }
-    public readonly struct CameraOverlayType
-    {
-        public Sprite Sprite { get; }
-        public Vector2 Size { get; }
-
-        public CameraOverlayType(byte[] rawData, int width, int height)
-        {
-            Sprite = RogueUtilities.ConvertToSprite(rawData);
-            Size = new Vector2(width, height);
-        }
-
-        public static CameraOverlayType Disposable { get; } = new(Properties.Resources.PhotoFrame, 400, 300);
-        public static CameraOverlayType Normal { get; } = new(Properties.Resources.PhotoFrame, 400, 300);
-        public static CameraOverlayType Streamcorder { get; } = new(Properties.Resources.PhotoFrame, 400, 300);
-        public static CameraOverlayType SoulStealer { get; } = new(Properties.Resources.PhotoFrame, 400, 300);
     }
 }

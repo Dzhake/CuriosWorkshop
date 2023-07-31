@@ -63,6 +63,16 @@ namespace CuriosWorkshop.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] CameraFrame {
+            get {
+                object obj = ResourceManager.GetObject("CameraFrame", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] DisposableCamera {
             get {
                 object obj = ResourceManager.GetObject("DisposableCamera", resourceCulture);
@@ -136,26 +146,6 @@ namespace CuriosWorkshop.Properties {
         internal static byte[] PhotoCamera {
             get {
                 object obj = ResourceManager.GetObject("PhotoCamera", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] PhotoFrame {
-            get {
-                object obj = ResourceManager.GetObject("PhotoFrame", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] PhotoSummaryBackground {
-            get {
-                object obj = ResourceManager.GetObject("PhotoSummaryBackground", resourceCulture);
                 return ((byte[])(obj));
             }
         }

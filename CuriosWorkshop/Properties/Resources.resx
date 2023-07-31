@@ -14,14 +14,11 @@
   <data name="Photo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Photo.png;System.Byte[], mscorlib</value>
   </data>
-  <data name="PhotoFrame" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\PhotoFrame.png;System.Byte[], mscorlib</value>
+  <data name="CameraFrame" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CameraFrame.png;System.Byte[], mscorlib</value>
   </data>
   <data name="PhotoWindow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PhotoWindow.png;System.Byte[], mscorlib</value>
-  </data>
-  <data name="PhotoSummaryBackground" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\PhotoSummaryBackground.png;System.Byte[], mscorlib</value>
   </data>
   <data name="TakePhoto" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\TakePhoto.mp3;System.Byte[], mscorlib</value>
