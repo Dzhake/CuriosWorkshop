@@ -20,24 +20,32 @@ namespace CuriosWorkshop
                 gc.questMarkerList.ForEach(q => q.go.SetActive(value));
                 gc.questMarkerSmallList.ForEach(q => q.gameObject.SetActive(value));
             }
-            List<Agent> affectedAgents = new();
+            List<Agent> disabledAgents = new();
             try
             {
                 PhotographyPatches.preventQuestMarkerDestruction = true;
                 SetInterfaceVisible(false);
 
                 foreach (Agent agent in gc.agentList)
+                {
                     if (agent.ghost || agent.HasTrait(VanillaTraits.CameraShy))
-                        affectedAgents.Add(agent);
+                        disabledAgents.Add(agent);
+                }
+                foreach (PlayfieldObject obj in gc.agentList.Concat<PlayfieldObject>(gc.objectRealList))
+                {
+                    ObjectSprite? spr = obj.objectSprite;
+                    if (spr is not null && (spr.player1Highlight || spr.player2Highlight || spr.player3Highlight || spr.player4Highlight))
+                        spr.SetHighlight("Off");
+                }
 
-                affectedAgents.ForEach(static a => a.gameObject.SetActive(false));
+                disabledAgents.ForEach(static a => a.gameObject.SetActive(false));
                 action();
             }
             finally
             {
                 SetInterfaceVisible(true);
                 PhotographyPatches.preventQuestMarkerDestruction = false;
-                affectedAgents.ForEach(static a => a.gameObject.SetActive(true));
+                disabledAgents.ForEach(static a => a.gameObject.SetActive(true));
             }
         }
 

@@ -3,29 +3,29 @@ using UnityEngine;
 
 namespace CuriosWorkshop
 {
-    [ItemCategories(RogueCategories.Technology, RogueCategories.NonViolent, RogueCategories.NonStandardWeapons2, RogueCategories.NotRealWeapons)]
-    public class Flashlight : CustomItem, IFlashlight
+    [ItemCategories(RogueCategories.Technology, RogueCategories.NonViolent, RogueCategories.NonStandardWeapons2, RogueCategories.NotRealWeapons, RogueCategories.Weird)]
+    public class Blacklight : CustomItem, IFlashlight
     {
         [RLSetup]
         public static void Setup()
         {
-            RogueLibs.CreateCustomItem<Flashlight>()
+            RogueLibs.CreateCustomItem<Blacklight>()
                      .WithName(new CustomNameInfo
                      {
-                         English = "Flashlight",
-                         Russian = @"Фонарик",
+                         English = "Blacklight",
+                         Russian = @"Ультрафиолетовый фонарик",
                      })
                      .WithDescription(new CustomNameInfo
                      {
                          English = "",
                          Russian = @"",
                      })
-                     .WithSprite(Properties.Resources.Flashlight)
+                     .WithSprite(Properties.Resources.Blacklight)
                      .WithUnlock(new ItemUnlock
                      {
-                         UnlockCost = 1,
-                         CharacterCreationCost = 0,
-                         LoadoutCost = 0,
+                         UnlockCost = 5,
+                         CharacterCreationCost = 2,
+                         LoadoutCost = 2,
                      });
         }
 
@@ -33,9 +33,9 @@ namespace CuriosWorkshop
         {
             Item.itemType = ItemTypes.WeaponProjectile;
             Item.weaponCode = weaponType.WeaponProjectile;
-            Item.initCount = 300 * 100;
-            Item.rewardCount = 300 * 100;
-            Item.itemValue = 10;
+            Item.initCount = 120 * 100;
+            Item.rewardCount = 120 * 100;
+            Item.itemValue = 50;
             Item.stackable = true;
             Item.hasCharges = true;
 
@@ -56,14 +56,14 @@ namespace CuriosWorkshop
         }
         public void AimLight(Gun gun)
         {
-            MoveableLightSource source = MoveableLightSource.Get(gun);
-            source.TurnOn(() => gc.audioHandler.Play(Owner!, "FlashlightOn"));
-            source.UpdateLight(new Color32(199, 174, 120, 255));
+            MoveableLightSource lightSource = MoveableLightSource.Get(gun);
+            lightSource.TurnOn(() => gc.audioHandler.Play(Owner!, "FlashlightOn"));
+            lightSource.UpdateLight(new Color32(130, 0, 255, 255));
         }
         public void TurnOff(Gun gun)
         {
-            MoveableLightSource source = MoveableLightSource.Get(gun);
-            source.TurnOff(() => gc.audioHandler.Play(Owner!, "FlashlightOff"));
+            MoveableLightSource lightSource = MoveableLightSource.Get(gun);
+            lightSource.TurnOff(() => gc.audioHandler.Play(Owner!, "FlashlightOff"));
         }
 
     }

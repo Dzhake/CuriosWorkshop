@@ -12,9 +12,25 @@ namespace CuriosWorkshop
 
         public static MutatorUnlock CompleteDarknessMutator = null!;
 
+        public static Sprite FlashlightSprite = null!;
+        public static Material FlashlightMaterial = null!;
+
         public static void Apply()
         {
             Patcher.TypeWithPatches = typeof(LightingPatches);
+
+            RogueLibs.CreateCustomAudio("FlashlightOn", Properties.Resources.FlashlightOn);
+            RogueLibs.CreateCustomAudio("FlashlightOff", Properties.Resources.FlashlightOff);
+
+            FlashlightSprite = RogueUtilities.ConvertToSprite(Properties.Resources.FlashlightLight);
+            FlashlightSprite.texture.filterMode = FilterMode.Bilinear;
+
+            FlashlightMaterial = new Material(Shader.Find("Light2D/Light 60 Points"));
+            FlashlightMaterial.globalIlluminationFlags |= MaterialGlobalIlluminationFlags.RealtimeEmissive;
+
+
+            RogueLibs.CreateCustomSprite("Safe", SpriteScope.Objects, Properties.Resources.SafeWithKeypad);
+
 
             RogueLibs.CreateCustomUnlock(CompleteDarknessMutator = new MutatorUnlock("CompleteDarkness"))
                      .WithName(new CustomNameInfo
@@ -52,7 +68,7 @@ namespace CuriosWorkshop
         public static void Gun_Shoot_Prefix() => gunShooting = true;
         public static void Gun_Shoot_Postfix(Gun __instance)
         {
-            Flashlight? flashlight = gunLastItem?.GetHook<Flashlight>();
+            IFlashlight? flashlight = gunLastItem?.GetHook<IFlashlight>();
             if (flashlight is not null) __instance.gunContainerAnim.Play("", -1, 0f);
         }
         public static void Gun_Shoot_Finalizer() => gunShooting = false;
@@ -61,17 +77,17 @@ namespace CuriosWorkshop
         {
             gunLastItem = myGun;
             if (!gunShooting) return;
-            myGun.GetHook<Flashlight>()?.TurnOn(__instance);
+            myGun.GetHook<IFlashlight>()?.TurnOn(__instance);
         }
         public static void Gun_AimGun(Gun __instance)
-            => __instance.visibleGun?.GetHook<Flashlight>()?.AimLight(__instance);
+            => __instance.visibleGun?.GetHook<IFlashlight>()?.AimLight(__instance);
         public static void Gun_HideGun(Gun __instance)
-            => __instance.visibleGun?.GetHook<Flashlight>()?.TurnOff(__instance);
+            => __instance.visibleGun?.GetHook<IFlashlight>()?.TurnOff(__instance);
         public static void Gun_GunUpdate(Gun __instance)
         {
             if (!__instance.holdingAttack)
             {
-                Flashlight? flashlight = __instance.visibleGun?.GetHook<Flashlight>();
+                IFlashlight? flashlight = __instance.visibleGun?.GetHook<IFlashlight>();
                 if (flashlight is not null) __instance.HideGun();
             }
         }
@@ -115,5 +131,11 @@ namespace CuriosWorkshop
                 __result.a = 1f;
         }
 
+    }
+    public interface IFlashlight
+    {
+        void TurnOn(Gun gun);
+        void TurnOff(Gun gun);
+        void AimLight(Gun gun);
     }
 }

@@ -38,15 +38,18 @@ namespace CuriosWorkshop
         public void Set(CameraOverlayType type, Rect area, Vector2Int size)
         {
             Camera screenCamera = GameController.gameController.cameraScript.actualCamera.ScreenCamera;
-            Vector2 targetPos = screenCamera.WorldToScreenPoint(area.center);
 
-            RectTransform frameRect = frame.rectTransform;
-            frameRect.position = prevAlpha > 0f ? Vector2.SmoothDamp(frameRect.position, targetPos, ref moveSpeed, 0.1f) : targetPos;
-            flash.rectTransform.anchoredPosition = frameRect.anchoredPosition;
+            Vector2 targetPos = screenCamera.WorldToScreenPoint(area.center);
+            Vector2 prevPos = frame.rectTransform.position;
+            Vector3 newPos = prevAlpha > 0f ? Vector2.SmoothDamp(prevPos, targetPos, ref moveSpeed, 0.1f) : targetPos;
 
             frame.sprite = type.Frame;
+            frame.rectTransform.position = newPos;
+            flash.rectTransform.position = newPos;
+
             Vector2 sizeMultiplier = (Vector2)size / type.Size;
             frame.rectTransform.sizeDelta = type.Size * sizeMultiplier;
+            flash.rectTransform.sizeDelta = type.Size * sizeMultiplier;
 
             prevAlpha = Mathf.Clamp01(prevAlpha + 4f * Time.deltaTime);
             frame.color = frame.color.WithAlpha(prevAlpha);
@@ -75,7 +78,7 @@ namespace CuriosWorkshop
             }
         }
 
-        public Texture2D Capture()
+        public Texture2D Capture(Action<Action>? wrapper = null)
         {
             Vector2 relativeSize = Vector2Int.RoundToInt(frame.rectTransform.sizeDelta);
 
@@ -97,8 +100,11 @@ namespace CuriosWorkshop
                 tr.position = new Vector3(center.x, center.y, prevPos.z);
                 tk2dCamera.ZoomFactor *= newZoomMultiplier;
 
-                PhotoUtils.WithPhotoVision(() =>
+                bool rendered = false;
+
+                void RenderToTexture()
                 {
+                    rendered = true;
                     RenderTexture prevRender = screenCamera.targetTexture;
 
                     // create a render texture and render on it
@@ -115,6 +121,20 @@ namespace CuriosWorkshop
                     // return previous values
                     screenCamera.targetTexture = prevRender;
                     RenderTexture.active = null;
+                }
+                wrapper ??= static render => render();
+
+                PhotoUtils.WithPhotoVision(() =>
+                {
+                    try
+                    {
+                        wrapper(RenderToTexture);
+                    }
+                    catch (Exception e)
+                    {
+                        if (!rendered) RenderToTexture();
+                        CuriosPlugin.Logger.LogError(e);
+                    }
                 });
             }
             finally

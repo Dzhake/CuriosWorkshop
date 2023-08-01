@@ -32,6 +32,9 @@
   <data name="SoulStealer" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SoulStealer.png;System.Byte[], mscorlib</value>
   </data>
+  <data name="BlankFaceHead" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BlankFaceHead.png;System.Byte[], mscorlib</value>
+  </data>
 
   <data name="Flashlight" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Flashlight.png;System.Byte[], mscorlib</value>
@@ -44,6 +47,12 @@
   </data>
   <data name="FlashlightOff" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\FlashlightOff.mp3;System.Byte[], mscorlib</value>
+  </data>
+  <data name="Blacklight" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Blacklight.png;System.Byte[], mscorlib</value>
+  </data>
+  <data name="SafeWithKeypad" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SafeWithKeypad.png;System.Byte[], mscorlib</value>
   </data>
 
   <data name="TargetingItem" type="System.Resources.ResXFileRef, System.Windows.Forms">

@@ -68,15 +68,4 @@ namespace CuriosWorkshop
         public CustomTooltip TargetCursorText(Vector2 position) => default;
 
     }
-    public class XRayLens : CustomTrait
-    {
-        [RLSetup]
-        public static void Setup()
-        {
-
-        }
-
-        public override void OnAdded() { }
-        public override void OnRemoved() { }
-    }
 }

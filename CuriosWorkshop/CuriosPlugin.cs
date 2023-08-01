@@ -1,6 +1,7 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using RogueLibsCore;
+using UnityEngine;
 
 namespace CuriosWorkshop
 {
@@ -25,6 +26,23 @@ namespace CuriosWorkshop
             PhotographyPatches.Apply();
             LightingPatches.Apply();
             HomeBasePatches.Apply();
+        }
+
+        public static RogueSprite[] CreateOctoSprite(string name, SpriteScope scope, byte[] rawData, float rectSize, float ppu = 64f)
+        {
+            Rect Area(int x, int y) => new Rect(x * rectSize, y * rectSize, rectSize, rectSize);
+
+            return new RogueSprite[]
+            {
+                RogueLibs.CreateCustomSprite(name + "N", scope, rawData, Area(1, 0), ppu),
+                RogueLibs.CreateCustomSprite(name + "NE", scope, rawData, Area(2, 0), ppu),
+                RogueLibs.CreateCustomSprite(name + "E", scope, rawData, Area(2, 1), ppu),
+                RogueLibs.CreateCustomSprite(name + "SE", scope, rawData, Area(2, 2), ppu),
+                RogueLibs.CreateCustomSprite(name + "S", scope, rawData, Area(1, 2), ppu),
+                RogueLibs.CreateCustomSprite(name + "SW", scope, rawData, Area(0, 2), ppu),
+                RogueLibs.CreateCustomSprite(name + "W", scope, rawData, Area(0, 1), ppu),
+                RogueLibs.CreateCustomSprite(name + "NW", scope, rawData, Area(0, 0), ppu),
+            };
         }
 
     }
