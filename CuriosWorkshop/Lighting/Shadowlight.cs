@@ -3,29 +3,29 @@ using UnityEngine;
 
 namespace CuriosWorkshop
 {
-    [ItemCategories(RogueCategories.Technology, RogueCategories.NonViolent, RogueCategories.NonStandardWeapons2, RogueCategories.NotRealWeapons)]
-    public class Flashlight : CustomItem, IFlashlight
+    [ItemCategories(RogueCategories.Technology, RogueCategories.NonViolent, RogueCategories.NonStandardWeapons2, RogueCategories.NotRealWeapons, RogueCategories.Weird)]
+    public class Shadowlight : CustomItem, IFlashlight
     {
         [RLSetup]
         public static void Setup()
         {
-            RogueLibs.CreateCustomItem<Flashlight>()
+            RogueLibs.CreateCustomItem<Shadowlight>()
                      .WithName(new CustomNameInfo
                      {
-                         English = "Flashlight",
-                         Russian = @"Фонарик",
+                         English = "Shadowlight",
+                         Russian = @"Темнарик",
                      })
                      .WithDescription(new CustomNameInfo
                      {
                          English = "",
                          Russian = @"",
                      })
-                     .WithSprite(Properties.Resources.Flashlight)
+                     .WithSprite(Properties.Resources.Shadowlight)
                      .WithUnlock(new ItemUnlock
                      {
-                         UnlockCost = 0,
-                         CharacterCreationCost = 0,
-                         LoadoutCost = 0,
+                         UnlockCost = 3,
+                         CharacterCreationCost = 1,
+                         LoadoutCost = 1,
                      });
         }
 
@@ -35,13 +35,12 @@ namespace CuriosWorkshop
             Item.weaponCode = weaponType.WeaponProjectile;
             Item.initCount = 300 * 100;
             Item.rewardCount = 300 * 100;
-            Item.itemValue = 10;
+            Item.itemValue = 30;
             Item.stackable = true;
             Item.hasCharges = true;
 
             Item.isWeapon = true;
             Item.rapidFire = true;
-            Item.thiefCantSteal = true;
             Item.dontSelectNPC = true;
             Item.dontAutomaticallySelect = true;
             Item.doesNoDamage = true;
@@ -58,16 +57,16 @@ namespace CuriosWorkshop
         }
         public void AimLight(Gun gun)
         {
-            MoveableLightSource source = MoveableLightSource.Get(gun);
-            source.gameObject.layer = LightingPatches.LightSourceLayer;
-            source.TurnOn(() => gc.audioHandler.Play(Owner!, "FlashlightOn"));
-            source.UpdateLight(new Color32(199, 174, 120, 255));
+            MoveableLightSource lightSource = MoveableLightSource.Get(gun);
+            lightSource.gameObject.layer = LightingPatches.DarkSourceLayer;
+            lightSource.TurnOn(() => gc.audioHandler.Play(Owner!, "FlashlightOn"));
+            lightSource.UpdateLight(new Color32(160, 160, 120, 255));
         }
         public void TurnOff(Gun gun)
         {
-            MoveableLightSource source = MoveableLightSource.Get(gun);
-            source.gameObject.layer = LightingPatches.LightSourceLayer;
-            source.TurnOff(() => gc.audioHandler.Play(Owner!, "FlashlightOff"));
+            MoveableLightSource lightSource = MoveableLightSource.Get(gun);
+            lightSource.gameObject.layer = LightingPatches.DarkSourceLayer;
+            lightSource.TurnOff(() => gc.audioHandler.Play(Owner!, "FlashlightOff"));
         }
 
     }

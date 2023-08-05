@@ -39,6 +39,12 @@
   <data name="Flashlight" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Flashlight.png;System.Byte[], mscorlib</value>
   </data>
+  <data name="Shadowlight" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Shadowlight.png;System.Byte[], mscorlib</value>
+  </data>
+  <data name="Blacklight" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Blacklight.png;System.Byte[], mscorlib</value>
+  </data>
   <data name="FlashlightLight" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\FlashlightLight.png;System.Byte[], mscorlib</value>
   </data>
@@ -48,11 +54,11 @@
   <data name="FlashlightOff" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\FlashlightOff.mp3;System.Byte[], mscorlib</value>
   </data>
-  <data name="Blacklight" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Blacklight.png;System.Byte[], mscorlib</value>
-  </data>
   <data name="SafeWithKeypad" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SafeWithKeypad.png;System.Byte[], mscorlib</value>
+  </data>
+  <data name="DarkLightOverlayShader" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\DarkLightOverlayShader.assets;System.Byte[], mscorlib</value>
   </data>
 
   <data name="TargetingItem" type="System.Resources.ResXFileRef, System.Windows.Forms">

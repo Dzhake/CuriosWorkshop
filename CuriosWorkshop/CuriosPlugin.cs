@@ -13,11 +13,13 @@ namespace CuriosWorkshop
         public const string PluginName = "Curio's Workshop";
         public const string PluginVersion = "0.1.0";
 
+        public static CuriosPlugin Instance = null!;
         public new static ManualLogSource Logger = null!;
         public static RoguePatcher Patcher = null!;
 
         public void Awake()
         {
+            Instance = this;
             Logger = base.Logger;
             Patcher = new RoguePatcher(this);
             RogueLibs.LoadFromAssembly();

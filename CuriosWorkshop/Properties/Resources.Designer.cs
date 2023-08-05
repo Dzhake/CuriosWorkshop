@@ -93,6 +93,16 @@ namespace CuriosWorkshop.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] DarkLightOverlayShader {
+            get {
+                object obj = ResourceManager.GetObject("DarkLightOverlayShader", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] DisposableCamera {
             get {
                 object obj = ResourceManager.GetObject("DisposableCamera", resourceCulture);
@@ -186,6 +196,16 @@ namespace CuriosWorkshop.Properties {
         internal static byte[] SafeWithKeypad {
             get {
                 object obj = ResourceManager.GetObject("SafeWithKeypad", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Shadowlight {
+            get {
+                object obj = ResourceManager.GetObject("Shadowlight", resourceCulture);
                 return ((byte[])(obj));
             }
         }

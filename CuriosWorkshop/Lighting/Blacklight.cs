@@ -41,6 +41,7 @@ namespace CuriosWorkshop
 
             Item.isWeapon = true;
             Item.rapidFire = true;
+            Item.dontSelectNPC = true;
             Item.dontAutomaticallySelect = true;
             Item.doesNoDamage = true;
             Item.gunKnockback = 0;
@@ -57,12 +58,14 @@ namespace CuriosWorkshop
         public void AimLight(Gun gun)
         {
             MoveableLightSource lightSource = MoveableLightSource.Get(gun);
+            lightSource.gameObject.layer = LightingPatches.LightSourceLayer;
             lightSource.TurnOn(() => gc.audioHandler.Play(Owner!, "FlashlightOn"));
             lightSource.UpdateLight(new Color32(130, 0, 255, 255));
         }
         public void TurnOff(Gun gun)
         {
             MoveableLightSource lightSource = MoveableLightSource.Get(gun);
+            lightSource.gameObject.layer = LightingPatches.LightSourceLayer;
             lightSource.TurnOff(() => gc.audioHandler.Play(Owner!, "FlashlightOff"));
         }
 

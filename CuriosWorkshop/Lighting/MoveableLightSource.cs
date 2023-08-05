@@ -19,6 +19,8 @@ namespace CuriosWorkshop
                 LightSprite lightSprite = go.AddComponent<LightSprite>();
                 lightSprite.Sprite = LightingPatches.FlashlightSprite;
                 lightSprite.Material = LightingPatches.FlashlightMaterial;
+                lightSprite.Material.SetFloat("_ObstacleMul", 2000f);
+                lightSprite.Material.SetFloat("_EmissionColorMul", 1f);
                 return lightSprite;
             }
 
@@ -30,7 +32,7 @@ namespace CuriosWorkshop
             MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
             renderer.renderingLayerMask = 4294967295u;
             transform.localScale = new Vector3(12f, 12f, 0f);
-            gameObject.layer = 11;
+            gameObject.layer = LightingPatches.LightSourceLayer;
             tag = "Light";
         }
         private void Update()

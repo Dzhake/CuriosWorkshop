@@ -1,4 +1,11 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
+using HarmonyLib;
 using Light2D;
 using RogueLibsCore;
 using UnityEngine;
@@ -61,6 +68,11 @@ namespace CuriosWorkshop
             Patcher.Postfix(typeof(SpawnerMain), nameof(SpawnerMain.SetLighting2));
             Patcher.Postfix(typeof(SpawnerMain), nameof(SpawnerMain.GetLightColor));
 
+            Patcher.Postfix(typeof(LightingSystem), "Start");
+            Patcher.Postfix(typeof(LightingSystem), "RenderLightSources");
+            Patcher.Transpiler(typeof(LightingSystem), "RenderLightOverlay");
+
+            CuriosPlugin.Instance.StartCoroutine(LoadDarkShaderCoroutine());
         }
 
         private static bool gunShooting;
@@ -114,11 +126,12 @@ namespace CuriosWorkshop
         {
             if (myObject is Agent agent && IsCompleteDarkness)
             {
-                LightSprite? light = agent.agentSpriteTransform?.Find("LightRealAgent")?.GetComponent<LightSprite>();
-                if (light is null) return;
+                if (!agent.agentSpriteTransform) return;
+                LightSprite? light = agent.agentSpriteTransform.Find("LightRealAgent")?.GetComponent<LightSprite>();
+                if (!light || light is null) return;
                 if (agent.isPlayer > 0)
                 {
-                    light.Color.a = 1f;
+                    light.Color.a = Mathf.Min(1f, light.Color.a * 1.5f);
                     light.gameObject.SetActive(true);
                     return;
                 }
@@ -128,7 +141,90 @@ namespace CuriosWorkshop
         public static void SpawnerMain_GetLightColor(ref Color __result)
         {
             if (IsCompleteDarkness)
-                __result.a = 1f;
+                __result.a = Mathf.Min(1f, __result.a * 1.5f);
+        }
+
+        public static void LightingSystem_Start(LightingSystem __instance)
+        {
+            DarkTextures.Remove(__instance);
+            DarkTextures.Add(__instance, CreateDarkTexture(__instance));
+        }
+        public static void LightingSystem_RenderLightSources(LightingSystem __instance)
+            => RenderDarkTexture(__instance);
+
+        public static IEnumerable<CodeInstruction> LightingSystem_RenderLightOverlay(IEnumerable<CodeInstruction> code)
+        {
+            IEnumerable<CodeInstruction> modified = code.AddRegionAfter(new Func<CodeInstruction, bool>[]
+            {
+                static i => i.opcode == OpCodes.Ldstr && (string)i.operand == "_Scale",
+                static _ => true,
+                static _ => true,
+                static i => i.opcode == OpCodes.Callvirt,
+            }, new Func<CodeInstruction[], CodeInstruction>[]
+            {
+                static _ => new CodeInstruction(OpCodes.Ldarg_0),
+                static _ => new CodeInstruction(OpCodes.Call, typeof(LightingPatches).GetMethod(nameof(SetDarkUniforms))),
+            });
+            CodeInstruction[] prepend =
+            {
+                new CodeInstruction(OpCodes.Ldarg_0),
+                new CodeInstruction(OpCodes.Call, typeof(LightingPatches).GetMethod(nameof(InitializeDarkShader))),
+            };
+            return prepend.Concat(modified);
+        }
+
+        private static Shader? DarkShader;
+        public const int DarkSourceLayer = 7;
+        public const int LightSourceLayer = 11;
+
+        private static readonly ConditionalWeakTable<LightingSystem, RenderTexture> DarkTextures = new();
+        public static RenderTexture GetDarkTexture(LightingSystem system)
+        {
+            FieldInfo sizeField = AccessTools.Field(typeof(LightingSystem), "_lightTextureSize");
+            Point2 size = (Point2)sizeField.GetValue(system);
+            RenderTexture tex = DarkTextures.GetValue(system, CreateDarkTexture);
+            if (tex.width != size.x || tex.height != size.y)
+            {
+                DarkTextures.Remove(system);
+                DarkTextures.Add(system, tex = CreateDarkTexture(system));
+            }
+            return tex;
+        }
+        private static RenderTexture CreateDarkTexture(LightingSystem system)
+        {
+            FieldInfo sizeField = AccessTools.Field(typeof(LightingSystem), "_lightTextureSize");
+            FieldInfo formatField = AccessTools.Field(typeof(LightingSystem), "_texFormat");
+            Point2 size = (Point2)sizeField.GetValue(system);
+            RenderTextureFormat format = (RenderTextureFormat)formatField.GetValue(system);
+            return new RenderTexture(size.x, size.y, 0, format);
+        }
+
+        private static IEnumerator LoadDarkShaderCoroutine()
+        {
+            AssetBundleCreateRequest req = AssetBundle.LoadFromMemoryAsync(Properties.Resources.DarkLightOverlayShader);
+            yield return req;
+            AssetBundle bundle = req.assetBundle;
+            DarkShader = bundle.LoadAsset<Shader>("DarkLightOverlay");
+        }
+
+        public static void InitializeDarkShader(LightingSystem __instance)
+        {
+            if (DarkShader is null || __instance.LightOverlayMaterial.shader == DarkShader) return;
+            __instance.LightOverlayMaterial.shader = DarkShader;
+        }
+        public static void RenderDarkTexture(LightingSystem __instance)
+        {
+            __instance.LightCamera.targetTexture = GetDarkTexture(__instance);
+            __instance.LightCamera.cullingMask = 1 << DarkSourceLayer;
+            __instance.LightCamera.backgroundColor = new Color(0f, 0f, 0f, 0f);
+            __instance.LightCamera.Render();
+            __instance.LightCamera.targetTexture = null;
+            __instance.LightCamera.cullingMask = 0;
+        }
+        public static void SetDarkUniforms(LightingSystem __instance)
+        {
+            if (__instance.LightOverlayMaterial.shader != DarkShader) return;
+            __instance.LightOverlayMaterial.SetTexture("_DarkSourcesTex", GetDarkTexture(__instance));
         }
 
     }
