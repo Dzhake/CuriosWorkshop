@@ -1,4 +1,5 @@
-﻿using RogueLibsCore;
+﻿#if DEBUG
+using RogueLibsCore;
 using UnityEngine;
 
 namespace CuriosWorkshop
@@ -9,9 +10,6 @@ namespace CuriosWorkshop
         [RLSetup]
         public static void Setup()
         {
-            #if !DEBUG
-            return;
-            #endif
             RogueLibs.CreateCustomItem<TargetingItem>()
                      .WithName(new CustomNameInfo("@ Targeting Item"))
                      .WithDescription(new CustomNameInfo("Displays tile coordinates."))
@@ -37,3 +35,4 @@ namespace CuriosWorkshop
 
     }
 }
+#endif
