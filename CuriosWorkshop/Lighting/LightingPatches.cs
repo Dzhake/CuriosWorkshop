@@ -39,7 +39,10 @@ namespace CuriosWorkshop
             RogueLibs.CreateCustomSprite("Safe", SpriteScope.Objects, Properties.Resources.SafeWithKeypad);
 
 
-            RogueLibs.CreateCustomUnlock(CompleteDarknessMutator = new MutatorUnlock("CompleteDarkness"))
+            RogueLibs.CreateCustomUnlock(CompleteDarknessMutator = new MutatorUnlock("CompleteDarkness")
+                     {
+                         Recommendations = { "RogueVision" },
+                     })
                      .WithName(new CustomNameInfo
                      {
                          English = "Complete Darkness",
@@ -67,6 +70,8 @@ namespace CuriosWorkshop
 
             Patcher.Postfix(typeof(SpawnerMain), nameof(SpawnerMain.SetLighting2));
             Patcher.Postfix(typeof(SpawnerMain), nameof(SpawnerMain.GetLightColor));
+
+            Patcher.Postfix(typeof(Agent), "Awake");
 
             Patcher.Postfix(typeof(LightingSystem), "Start");
             Patcher.Postfix(typeof(LightingSystem), "RenderLightSources");
@@ -116,10 +121,13 @@ namespace CuriosWorkshop
             => __instance.lightingSystem.EnableAmbientLight = !IsCompleteDarkness;
         public static bool SpawnerMain_SpawnLightTemp(string lightType)
             => !(lightType == "Item" && IsCompleteDarkness);
-        public static void SpawnerMain_SpawnLightReal(PlayfieldObject playfieldObject, LightReal __result)
+        public static void SpawnerMain_SpawnLightReal(LightReal __result)
         {
-            if (IsCompleteDarkness)
+            if (IsCompleteDarkness && __result.fancyLight)
+            {
+                __result.fancyLight.Color = Color.black;
                 __result.fancyLight.gameObject.SetActive(false);
+            }
         }
 
         public static void SpawnerMain_SetLighting2(PlayfieldObject myObject)
@@ -135,6 +143,7 @@ namespace CuriosWorkshop
                     light.gameObject.SetActive(true);
                     return;
                 }
+                light.Color = Color.black;
                 light.gameObject.SetActive(false);
             }
         }
@@ -142,6 +151,12 @@ namespace CuriosWorkshop
         {
             if (IsCompleteDarkness)
                 __result.a = Mathf.Min(1f, __result.a * 1.5f);
+        }
+
+        public static void Agent_Awake(Agent __instance)
+        {
+            if (IsCompleteDarkness && __instance.rogueLight is not null)
+                __instance.rogueLight.Color = Color.black;
         }
 
         public static void LightingSystem_Start(LightingSystem __instance)
