@@ -31,7 +31,7 @@ namespace CuriosWorkshop
 
             MeshRenderer renderer = gameObject.GetComponent<MeshRenderer>();
             renderer.renderingLayerMask = 4294967295u;
-            transform.localScale = new Vector3(12f, 12f, 0f);
+            transform.localScale = Vector3.one;
             gameObject.layer = LightingPatches.LightSourceLayer;
             tag = "Light";
         }
@@ -41,8 +41,9 @@ namespace CuriosWorkshop
                 forceUpdateMesh.Invoke(lightSprites[i], new object?[] { true });
         }
 
-        public void UpdateLight(Color color)
+        public void UpdateLight(Color color, float size)
         {
+            transform.localScale = new Vector3(size, size, 1f);
             transform.localEulerAngles = new Vector3(0f, 0f, -90f);
             Array.ForEach(lightSprites, light => light.Color = color);
         }

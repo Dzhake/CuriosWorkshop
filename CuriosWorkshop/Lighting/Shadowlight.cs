@@ -60,7 +60,7 @@ namespace CuriosWorkshop
             MoveableLightSource lightSource = MoveableLightSource.Get(gun);
             lightSource.gameObject.layer = LightingPatches.DarkSourceLayer;
             lightSource.TurnOn(() => gc.audioHandler.Play(Owner!, "FlashlightOn"));
-            lightSource.UpdateLight(new Color32(160, 160, 120, 255));
+            lightSource.UpdateLight(new Color32(160, 160, 120, 255), 8f);
         }
         public void TurnOff(Gun gun)
         {
