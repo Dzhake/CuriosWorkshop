@@ -9,6 +9,7 @@ using HarmonyLib;
 using Light2D;
 using RogueLibsCore;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace CuriosWorkshop
 {
@@ -60,8 +61,11 @@ namespace CuriosWorkshop
             Patcher.Finalizer(typeof(Gun), nameof(Gun.Shoot), nameof(Gun_Shoot_Finalizer), gunShootPars);
 
             Patcher.Postfix(typeof(Gun), nameof(Gun.ShowGun));
+            //Patcher.Prefix(typeof(Gun), nameof(Gun.AimGun));
             Patcher.Prefix(typeof(Gun), nameof(Gun.HideGun));
             Patcher.Postfix(typeof(Gun), nameof(Gun.GunUpdate));
+
+            Patcher.Postfix(typeof(InvDatabase), nameof(InvDatabase.FillAgent));
 
             Patcher.Postfix(typeof(LoadLevel), nameof(LoadLevel.SetupMore5));
             Patcher.Postfix(typeof(CameraScript), nameof(CameraScript.SetLighting));
@@ -102,11 +106,31 @@ namespace CuriosWorkshop
             => __instance.visibleGun?.GetHook<IFlashlight>()?.TurnOff(__instance);
         public static void Gun_GunUpdate(Gun __instance)
         {
-            if (!__instance.holdingAttack)
+            Agent agent = __instance.agent;
+            if (!__instance.holdingAttack && agent.isPlayer > 0)
             {
                 IFlashlight? flashlight = __instance.visibleGun?.GetHook<IFlashlight>();
                 if (flashlight is not null) __instance.HideGun();
             }
+            InvItem? weapon = agent.inventory.equippedWeapon;
+            if (agent.isPlayer == 0 && agent.opponent == null && !agent.inCombat && IsCompleteDarkness)
+            {
+                Flashlight? flashlight = agent.inventory.GetItem<Flashlight>();
+                if (flashlight is not null)
+                {
+                    agent.inventory.equippedWeapon = flashlight.Item;
+                    __instance.ShowGun(flashlight.Item);
+                    flashlight.AimLight(__instance);
+                }
+            }
+            if (agent.isPlayer == 0)
+                weapon.GetHook<IFlashlight>()?.AimLight(__instance);
+        }
+
+        public static void InvDatabase_FillAgent(InvDatabase __instance)
+        {
+            if (__instance.agent.isPlayer == 0 && IsCompleteDarkness && !__instance.HasItem<Flashlight>() && Random.Range(0, 5) != 0)
+                __instance.AddItem<Flashlight>(30*100);
         }
 
         public static bool IsCompleteDarkness

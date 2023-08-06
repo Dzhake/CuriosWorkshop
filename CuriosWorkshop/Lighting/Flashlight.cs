@@ -34,6 +34,7 @@ namespace CuriosWorkshop
             Item.itemType = ItemTypes.WeaponProjectile;
             Item.weaponCode = weaponType.WeaponProjectile;
             Item.initCount = 300 * 100;
+            Item.initCountAI = 30 * 100;
             Item.rewardCount = 300 * 100;
             Item.itemValue = 10;
             Item.stackable = true;
@@ -53,7 +54,7 @@ namespace CuriosWorkshop
         public void TurnOn(Gun gun)
         {
             Owner!.weaponCooldown = 0.01f;
-            gun.SubtractBullets(1, Item);
+            if (Owner!.isPlayer > 0) gun.SubtractBullets(1, Item);
             AimLight(gun);
         }
         public void AimLight(Gun gun)

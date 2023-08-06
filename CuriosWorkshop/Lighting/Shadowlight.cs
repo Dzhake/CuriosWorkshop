@@ -33,8 +33,8 @@ namespace CuriosWorkshop
         {
             Item.itemType = ItemTypes.WeaponProjectile;
             Item.weaponCode = weaponType.WeaponProjectile;
-            Item.initCount = 300 * 100;
-            Item.rewardCount = 300 * 100;
+            Item.initCount = 120 * 100;
+            Item.rewardCount = 120 * 100;
             Item.itemValue = 30;
             Item.stackable = true;
             Item.hasCharges = true;
