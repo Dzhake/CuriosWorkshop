@@ -115,6 +115,8 @@ namespace CuriosWorkshop
             InvItem? weapon = agent.inventory.equippedWeapon;
             if (agent.isPlayer == 0 && agent.opponent == null && !agent.inCombat && IsCompleteDarkness)
             {
+                if (LightingUtilities.GetLightingLevel(agent.curPosition) > 0.4f)
+                    return;
                 Flashlight? flashlight = agent.inventory.GetItem<Flashlight>();
                 if (flashlight is not null)
                 {
@@ -123,8 +125,10 @@ namespace CuriosWorkshop
                     flashlight.AimLight(__instance);
                 }
             }
-            if (agent.isPlayer == 0)
-                weapon.GetHook<IFlashlight>()?.AimLight(__instance);
+            if (agent.isPlayer == 0 && (agent.opponent != null || agent.inCombat) && weapon.HasHook<IFlashlight>())
+                agent.inventory.ChooseWeapon();
+            //if (agent.isPlayer == 0)
+            //weapon.GetHook<IFlashlight>()?.AimLight(__instance);
         }
 
         public static void InvDatabase_FillAgent(InvDatabase __instance)

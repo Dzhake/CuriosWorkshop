@@ -12,7 +12,7 @@ namespace CuriosWorkshop
         {
             RogueLibs.CreateCustomItem<TargetingItem>()
                      .WithName(new CustomNameInfo("@ Targeting Item"))
-                     .WithDescription(new CustomNameInfo("Displays tile coordinates."))
+                     .WithDescription(new CustomNameInfo("Displays tile coordinates and lighting level."))
                      .WithSprite(Properties.Resources.TargetingItem)
                      .WithUnlock(new ItemUnlock());
         }
@@ -31,7 +31,13 @@ namespace CuriosWorkshop
         public bool TargetPosition(Vector2 position) => true;
 
         public CustomTooltip TargetCursorText(Vector2 position)
-            => $"{position / new Vector2(0.64f, 0.64f)}";
+        {
+            string coordinates = $"{position / new Vector2(0.64f, 0.64f)}";
+            Color color = LightingUtilities.GetLighting(position, Owner!.agentCamera);
+            //float brightness = LightingUtilities.GetLightingLevel(position, Owner.agentCamera);
+            float brightness = ((Vector3)(Vector4)color).magnitude / Mathf.Sqrt(3f);
+            return new CustomTooltip(coordinates + $" {Mathf.Round(brightness * 100) / 100f}", color);
+        }
 
     }
 }
