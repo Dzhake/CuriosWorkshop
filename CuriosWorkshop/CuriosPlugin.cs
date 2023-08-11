@@ -17,6 +17,13 @@ namespace CuriosWorkshop
         public new static ManualLogSource Logger = null!;
         public static RoguePatcher Patcher = null!;
 
+        public static bool IsDebug
+#if DEBUG
+            => true;
+#else
+            => false;
+#endif
+
         public void Awake()
         {
             Instance = this;

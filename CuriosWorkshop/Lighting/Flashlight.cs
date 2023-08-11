@@ -1,4 +1,5 @@
-﻿using RogueLibsCore;
+﻿using System.Collections;
+using RogueLibsCore;
 using UnityEngine;
 
 namespace CuriosWorkshop
@@ -33,9 +34,9 @@ namespace CuriosWorkshop
         {
             Item.itemType = ItemTypes.WeaponProjectile;
             Item.weaponCode = weaponType.WeaponProjectile;
-            Item.initCount = 300 * 100;
+            Item.initCount = 180 * 100;
             Item.initCountAI = 30 * 100;
-            Item.rewardCount = 300 * 100;
+            Item.rewardCount = 180 * 100;
             Item.itemValue = 10;
             Item.stackable = true;
             Item.hasCharges = true;

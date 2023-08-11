@@ -23,6 +23,8 @@ namespace CuriosWorkshop
         public static Sprite FlashlightSprite = null!;
         public static Material FlashlightMaterial = null!;
 
+        public static bool DeadlyUltraViolet => CuriosPlugin.IsDebug;
+
         public static void Apply()
         {
             Patcher.TypeWithPatches = typeof(LightingPatches);
@@ -66,6 +68,8 @@ namespace CuriosWorkshop
             Patcher.Postfix(typeof(Gun), nameof(Gun.GunUpdate));
 
             Patcher.Postfix(typeof(InvDatabase), nameof(InvDatabase.FillAgent));
+
+            Patcher.Postfix(typeof(Relationships), nameof(Relationships.AssessFlee));
 
             Patcher.Postfix(typeof(LoadLevel), nameof(LoadLevel.SetupMore5));
             Patcher.Postfix(typeof(CameraScript), nameof(CameraScript.SetLighting));
@@ -117,6 +121,11 @@ namespace CuriosWorkshop
             {
                 if (LightingUtilities.GetLightingLevel(agent.curPosition) > 0.4f)
                     return;
+
+                if (__instance.agent.HasTrait(VanillaTraits.StubbyFingers)
+                 || __instance.agent.HasTrait(VanillaTraits.SausageFingers)
+                 || __instance.agent.HasTrait(VanillaTraits.PeaBrained)) return;
+
                 Flashlight? flashlight = agent.inventory.GetItem<Flashlight>();
                 if (flashlight is not null)
                 {
@@ -134,7 +143,20 @@ namespace CuriosWorkshop
         public static void InvDatabase_FillAgent(InvDatabase __instance)
         {
             if (__instance.agent.isPlayer == 0 && IsCompleteDarkness && !__instance.HasItem<Flashlight>() && Random.Range(0, 5) != 0)
+            {
+                if (__instance.agent.HasTrait(VanillaTraits.StubbyFingers)
+                 || __instance.agent.HasTrait(VanillaTraits.SausageFingers)
+                 || __instance.agent.HasTrait(VanillaTraits.PeaBrained)) return;
+
                 __instance.AddItem<Flashlight>(30*100);
+            }
+        }
+
+        public static void Relationships_AssessFlee(Relationships __instance, Agent ___agent, Agent otherAgent, ref float __result)
+        {
+            bool isAffected = DeadlyUltraViolet || ___agent.specialAbility == VanillaAbilities.Bite || ___agent.zombified;
+            if (isAffected && otherAgent.inventory.equippedWeapon?.HasHook<Blacklight>() is true)
+                __result = 999999f;
         }
 
         public static bool IsCompleteDarkness
