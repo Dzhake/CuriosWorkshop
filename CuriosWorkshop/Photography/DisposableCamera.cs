@@ -17,8 +17,7 @@ namespace CuriosWorkshop
                      })
                      .WithDescription(new CustomNameInfo
                      {
-                         English = "",
-                         Russian = @"",
+                         English = "Works the same way as a Photo Camera, but disappears on use.",
                      })
                      .WithSprite(Properties.Resources.DisposableCamera)
                      .WithUnlock(new ItemUnlock

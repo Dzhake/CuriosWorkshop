@@ -20,8 +20,7 @@ namespace CuriosWorkshop
                      })
                      .WithDescription(new CustomNameInfo
                      {
-                         English = "",
-                         Russian = @"",
+                         English = "A camera that steals souls! All NPCs with souls in the photographed area will turn into mindless angry walking corpses.",
                      })
                      .WithSprite(Properties.Resources.SoulStealer)
                      .WithUnlock(new ItemUnlock

@@ -17,8 +17,7 @@ namespace CuriosWorkshop
                      })
                      .WithDescription(new CustomNameInfo
                      {
-                         English = "",
-                         Russian = @"",
+                         English = "Works similar to a Disposable Camera, except that it creates Live Photos instead of regular ones",
                      })
                      .WithSprite(Properties.Resources.Streamcorder)
                      .WithUnlock(new ItemUnlock

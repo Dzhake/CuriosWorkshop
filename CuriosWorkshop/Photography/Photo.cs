@@ -17,8 +17,7 @@ namespace CuriosWorkshop
                      })
                      .WithDescription(new CustomNameInfo
                      {
-                         English = "",
-                         Russian = @"",
+                         English = "A photo taken with a Photo Camera or a Disposable Camera. Can be used to open a window showing the taken screenshot. Can be sold for some money - the amount depends on objects and events depicted in the photo. If an NPC in the photo is doing something illegal/suspicious/bad, the player can use it to blackmail them, or report them to the Cops.",
                      })
                      .WithSprite(Properties.Resources.Photo, 256f);
         }

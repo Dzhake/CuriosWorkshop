@@ -15,8 +15,7 @@ namespace CuriosWorkshop
                      })
                      .WithDescription(new CustomNameInfo
                      {
-                         English = "",
-                         Russian = @"",
+                         English = "You can take wider shots (+25% to both width and height).",
                      })
                      .WithUnlock(new TraitUnlock
                      {

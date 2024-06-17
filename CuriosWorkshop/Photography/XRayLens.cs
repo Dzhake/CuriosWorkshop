@@ -15,8 +15,7 @@ namespace CuriosWorkshop
                      })
                      .WithDescription(new CustomNameInfo
                      {
-                         English = "",
-                         Russian = @"",
+                         English = "You can take shots through walls.",
                      })
                      .WithUnlock(new TraitUnlock
                      {

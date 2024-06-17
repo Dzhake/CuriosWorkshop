@@ -15,8 +15,7 @@ namespace CuriosWorkshop
                      })
                      .WithDescription(new CustomNameInfo
                      {
-                         English = "",
-                         Russian = @"",
+                         English = "Photos never turn out blurry.",
                      })
                      .WithUnlock(new TraitUnlock
                      {
