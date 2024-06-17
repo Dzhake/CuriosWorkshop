@@ -1,7 +1,11 @@
 
-## ⚰️ Curio's Workshop has been discontinued ⚰️
+~~## ⚰️ Curio's Workshop has been discontinued ⚰️~~
 
-The project's repository is archived as part of the GitHub Archive Program. Curio's Workshop's code and the documentation will no longer be updated. See more information in the [latest RogueLibs blog post](https://chasmical.github.io/RogueLibs/blog/2024/02/03/discontinuing-roguelibs). Feel free to fork the repository to continue working on the project.
+~~The project's repository is archived as part of the GitHub Archive Program. Curio's Workshop's code and the documentation will no longer be updated. See more information in the [latest RogueLibs blog post](https://chasmical.github.io/RogueLibs/blog/2024/02/03/discontinuing-roguelibs). Feel free to fork the repository to continue working on the project.~~
+
+I'll try to make it usable
+
+> Dzhake
 
 ## Curio's Workshop
 Somewhere in the city of Streets of Rogue lived an inventor-collector by the name Curio. And he had a warehouse stuffed with many antique oddities, his own contraptions, and rare objects. One day, one of the many Mayors the city had decided to nationalize the warehouse, to use its contents for their own goals. Mayor's henchmen knew nothing about the oddities contained in the warehouse, and things quickly went awry. Slum dwellers, gangsters and thieves that were nearby looted everything from the warehouse, and eventually these items started circulating around the entire city. Shortly after this, Curio joined the Resistance, set up a workshop, and began constructing some mysterious machine...
