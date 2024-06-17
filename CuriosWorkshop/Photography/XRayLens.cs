@@ -10,8 +10,8 @@ namespace CuriosWorkshop
             RogueLibs.CreateCustomTrait<XRayLens>()
                      .WithName(new CustomNameInfo
                      {
-                         English = "X-Ray Lens",
-                         Russian = @"Рентгеновская линза",
+                         English = "[CW] X-Ray Lens",
+                         Russian = @"[CW] Рентгеновская линза",
                      })
                      .WithDescription(new CustomNameInfo
                      {

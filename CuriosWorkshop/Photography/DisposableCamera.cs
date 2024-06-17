@@ -12,8 +12,8 @@ namespace CuriosWorkshop
             RogueLibs.CreateCustomItem<DisposableCamera>()
                      .WithName(new CustomNameInfo
                      {
-                         English = "Disposable Camera",
-                         Russian = @"Одноразовая камера",
+                         English = "[CW] Disposable Camera",
+                         Russian = @"[CW] Одноразовая камера",
                      })
                      .WithDescription(new CustomNameInfo
                      {

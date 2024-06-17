@@ -10,8 +10,8 @@ namespace CuriosWorkshop
             RogueLibs.CreateCustomTrait<SteadyHand>()
                      .WithName(new CustomNameInfo
                      {
-                         English = "Steady Hand",
-                         Russian = @"Твёрдая рука",
+                         English = "[CW] Steady Hand",
+                         Russian = @"[CW] Твёрдая рука",
                      })
                      .WithDescription(new CustomNameInfo
                      {

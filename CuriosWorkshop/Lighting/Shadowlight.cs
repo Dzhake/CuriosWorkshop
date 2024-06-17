@@ -12,13 +12,12 @@ namespace CuriosWorkshop
             RogueLibs.CreateCustomItem<Shadowlight>()
                      .WithName(new CustomNameInfo
                      {
-                         English = "Shadowlight",
-                         Russian = @"Темнарик",
+                         English = "[CW] Shadowlight",
+                         Russian = @"[CW] Темнарик",
                      })
                      .WithDescription(new CustomNameInfo
                      {
-                         English = "",
-                         Russian = @"",
+                         English = "Works like a Flashlight, except it emits darkness instead of light.",
                      })
                      .WithSprite(Properties.Resources.Shadowlight)
                      .WithUnlock(new ItemUnlock

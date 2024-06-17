@@ -13,13 +13,12 @@ namespace CuriosWorkshop
             RogueLibs.CreateCustomItem<Flashlight>()
                      .WithName(new CustomNameInfo
                      {
-                         English = "Flashlight",
-                         Russian = @"Фонарик",
+                         English = "[CW] Flashlight",
+                         Russian = @"[CW] Фонарик",
                      })
                      .WithDescription(new CustomNameInfo
                      {
-                         English = "",
-                         Russian = @"",
+                         English = "Does exactly what you would expect it to do. 100% charge = 5 minutes. It's a passive item that you can turn on and off.",
                      })
                      .WithSprite(Properties.Resources.Flashlight)
                      .WithUnlock(new ItemUnlock

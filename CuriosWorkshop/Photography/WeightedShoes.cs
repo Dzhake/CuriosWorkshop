@@ -10,8 +10,8 @@ namespace CuriosWorkshop
             RogueLibs.CreateCustomTrait<WeightedShoes>()
                      .WithName(new CustomNameInfo
                      {
-                         English = "Weighted Shoes",
-                         Russian = @"Утяжелённые ботинки",
+                         English = "[CW] Weighted Shoes",
+                         Russian = @"[CW] Утяжелённые ботинки",
                      })
                      .WithDescription(new CustomNameInfo
                      {

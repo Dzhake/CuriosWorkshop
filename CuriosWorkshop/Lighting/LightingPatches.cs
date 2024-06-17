@@ -48,8 +48,8 @@ namespace CuriosWorkshop
                      })
                      .WithName(new CustomNameInfo
                      {
-                         English = "Complete Darkness",
-                         Russian = @"Полная темнота",
+                         English = "[CW] Complete Darkness",
+                         Russian = @"[CW] Полная темнота",
                      })
                      .WithDescription(new CustomNameInfo
                      {

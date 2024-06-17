@@ -12,8 +12,8 @@ namespace CuriosWorkshop
             RogueLibs.CreateCustomItem<Streamcorder>()
                      .WithName(new CustomNameInfo
                      {
-                         English = "Streamcorder",
-                         Russian = @"Стрим-камера",
+                         English = "[CW] Streamcorder",
+                         Russian = @"[CW] Стрим-камера",
                      })
                      .WithDescription(new CustomNameInfo
                      {

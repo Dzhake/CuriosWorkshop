@@ -12,8 +12,8 @@ namespace CuriosWorkshop
             RogueLibs.CreateCustomItem<Photo>()
                      .WithName(new CustomNameInfo
                      {
-                         English = "Photo",
-                         Russian = @"Фото",
+                         English = "[CW] Photo",
+                         Russian = @"[CW] Фото",
                      })
                      .WithDescription(new CustomNameInfo
                      {

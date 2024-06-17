@@ -13,13 +13,12 @@ namespace CuriosWorkshop
             RogueLibs.CreateCustomItem<Blacklight>()
                      .WithName(new CustomNameInfo
                      {
-                         English = "Blacklight",
-                         Russian = @"Ультрафиолетовый фонарик",
+                         English = "[CW] UV Flashlight",
+                         Russian = @"[CW] Ультрафиолетовый фонарик",
                      })
                      .WithDescription(new CustomNameInfo
                      {
-                         English = "",
-                         Russian = @"",
+                         English = "Works like a Flashlight, but also reveals footprints and traps. Burns Vampires. Can also be used to open Safes through a mini-game (there will be a 9-key keypad with fingerprints). 100% charge = 2 minutes.",
                      })
                      .WithSprite(Properties.Resources.Blacklight)
                      .WithUnlock(new ItemUnlock

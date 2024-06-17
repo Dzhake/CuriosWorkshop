@@ -15,8 +15,8 @@ namespace CuriosWorkshop
             RogueLibs.CreateCustomItem<SoulStealer>()
                      .WithName(new CustomNameInfo
                      {
-                         English = "Soul Stealer",
-                         Russian = @"Похититель душ",
+                         English = "[CW] Soul Stealer",
+                         Russian = @"[CW] Похититель душ",
                      })
                      .WithDescription(new CustomNameInfo
                      {
